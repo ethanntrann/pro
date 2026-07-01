@@ -99,6 +99,33 @@ p {
     color: black;
 }
 
+.quick-contact {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    max-width: 1050px;
+    margin: 0 auto 20px;
+    padding: 0 25px;
+    text-align: center;
+}
+
+.quick-contact a {
+    color: #111111;
+    font-weight: 700;
+    text-decoration: none;
+    border-bottom: 2px solid #d6b56d;
+}
+
+.quick-contact a:hover {
+    color: #8a6d2f;
+}
+
+.quick-contact span {
+    color: #666;
+}
+
 .grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));

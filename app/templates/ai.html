@@ -3,9 +3,10 @@
 {% block content %}
 <section class="ai-box">
     <h1>AI Assistant</h1>
-    <p>Ask my AI assistant about my research, projects, leadership, or interests.</p>
 
-    <div id="chat-window"></div>
+    <div id="chat-window">
+        <p><strong>AI:</strong> Hello! Ask me any question about Ethan's research, projects, leadership, or interests!</p>
+    </div>
 
     <div class="chat-controls">
         <input id="user-input" placeholder="Ask something about Ethan...">
@@ -42,8 +43,25 @@ function addMessage(sender, text) {
 
     label.textContent = `${sender}: `;
     message.appendChild(label);
-    message.appendChild(document.createTextNode(text));
+    if (sender === "AI") {
+        const response = document.createElement("span");
+        response.innerHTML = formatAssistantText(text);
+        message.appendChild(response);
+    } else {
+        message.appendChild(document.createTextNode(text));
+    }
     chatWindow.appendChild(message);
+}
+
+function formatAssistantText(text) {
+    const escaped = text
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;");
+
+    return escaped
+        .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+        .replace(/\*(.*?)\*/g, "<em>$1</em>");
 }
 </script>
 {% endblock %}

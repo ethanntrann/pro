@@ -23,11 +23,11 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 research_experiences = [
     {
         "title": "Healthcare Internship",
-        "description": "Observed patient care and became more interested in medicine and cancer biology."
+        "description": "Shadowed oncologist Dr. Bao Dao and learned about oncology practices such as patient consultations, reviewing imaging and lab results, discussing treatment plans, understanding chemotherapy and radiation care, and observing how physicians communicate with patients and families."
     },
     {
         "title": "Hospital Volunteering",
-        "description": "Volunteered in a hospital setting and learned more about patient-centered care."
+        "description": "Volunteered at Pomona Valley Hospital for four years, gaining experience through direct patient interactions, patient support, communication with hospital staff, and helping create a more welcoming and compassionate care environment."
     }
 ]
 
@@ -58,11 +58,6 @@ projects = [
         "skills": "AI, Human Interaction, Research"
     },
     {
-        "title": "Portfolio Website",
-        "description": "A professional personal website with multiple pages and an AI assistant.",
-        "skills": "Flask, HTML, CSS"
-    },
-    {
         "title": "Future Projects",
         "description": "More research, coding, and healthcare-related projects will be added here.",
         "skills": "Coming Soon"
@@ -75,12 +70,8 @@ leadership = [
         "description": "Lead club meetings, coordinate volunteer opportunities, and help students support humanitarian work through service, emergency preparedness, blood-donation awareness, and community outreach."
     },
     {
-        "title": "Competitive Events Officer for FBLA",
-        "description": "Support members as they prepare for business, finance, technology, and presentation competitions. Help organize practice resources, explain event expectations, encourage chapter participation, and strengthen the team's communication, professionalism, and competitive readiness."
-    },
-    {
-        "title": "President of Basketball for Kids",
-        "description": "Lead a service club that teaches elementary school students the fundamentals of basketball, including dribbling, passing, shooting, teamwork, sportsmanship, and confidence. Organize lessons that make athletics accessible, encouraging, and fun for younger students."
+        "title": "President of WeBall",
+        "description": "Lead a youth basketball service club that teaches elementary school students the fundamentals of the game, including dribbling, passing, shooting, defense, teamwork, confidence, and sportsmanship. Organize accessible lessons and mentorship opportunities that help younger students build athletic skills while learning discipline, cooperation, and encouragement."
     },
     {
         "title": "President of Asian Pacific Islander Student Union (APISU)",
@@ -89,6 +80,10 @@ leadership = [
     {
         "title": "Vice President of Key Club",
         "description": "Help lead a service-focused organization by supporting meeting planning, member engagement, volunteer coordination, and communication between officers and club members. Work to create meaningful service opportunities that encourage students to contribute consistently to their school and local community."
+    },
+    {
+        "title": "Competitive Events Officer for FBLA",
+        "description": "Support members as they prepare for business, finance, technology, and presentation competitions. Help organize practice resources, explain event expectations, encourage chapter participation, and strengthen the team's communication, professionalism, and competitive readiness."
     }
 ]
 
@@ -112,7 +107,7 @@ awards = [
     {
         "section": "HOSA Awards",
         "items": [
-            "8th Place - Creative Problem Solving"
+            "8th Place State - Creative Problem Solving"
         ]
     }
 ]
@@ -126,11 +121,13 @@ research, computer science, hackathons, volunteering, FBLA, leadership,
 and building technology that helps people. He has taken college-level
 biology and AP Chemistry, enjoys building computers, plays basketball,
 has hundreds of community service hours, and has leadership roles in
-American Red Cross Club, FBLA, Basketball for Kids, APISU, and Key Club.
+American Red Cross Club, FBLA, WeBall, APISU, and Key Club.
 He has earned awards in FBLA, HOSA, humanitarian and international law
 advocacy, and the President's Volunteer Service Award - Gold.
 
-Keep answers short, polished, and helpful.
+Give personalized answers based on the visitor's question. You may use
+Markdown-style **bold** and *italic* formatting for emphasis. Keep answers
+short, polished, and helpful.
 """
 
 def load_data():
