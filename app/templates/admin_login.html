@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="admin-panel">
+    <h1>Admin</h1>
+    <p>Sign in to view AI assistant questions and add new website content.</p>
+
+    {% if error %}
+    <p class="error">{{ error }}</p>
+    {% endif %}
+
+    <form method="POST" class="admin-form">
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password" required>
+        <button type="submit">Sign In</button>
+    </form>
+</section>
+{% endblock %}

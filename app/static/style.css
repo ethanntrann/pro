@@ -92,8 +92,16 @@ p {
 .card {
     background: white;
     padding: 28px;
-    border-radius: 18px;
+    border-radius: 8px;
     box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+}
+
+.card-image {
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 18px;
 }
 
 .card span {
@@ -115,7 +123,7 @@ p {
 .ai-box {
     max-width: 620px;
     background: white;
-    border-radius: 18px;
+    border-radius: 8px;
     padding: 30px;
     box-shadow: 0 10px 25px rgba(0,0,0,0.08);
 }
@@ -129,7 +137,7 @@ p {
     overflow-y: auto;
     background: #f1eee8;
     padding: 14px;
-    border-radius: 12px;
+    border-radius: 8px;
     margin-bottom: 14px;
 }
 
@@ -157,6 +165,77 @@ p {
 .chat-controls button:hover {
     background: #d6b56d;
     color: black;
+}
+
+.admin-panel {
+    max-width: 950px;
+}
+
+.admin-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.admin-form {
+    display: grid;
+    gap: 14px;
+    max-width: 640px;
+    background: white;
+    padding: 28px;
+    border-radius: 8px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+}
+
+.admin-form label {
+    font-weight: 600;
+}
+
+.admin-form input,
+.admin-form select,
+.admin-form textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font: inherit;
+}
+
+.admin-form button {
+    width: fit-content;
+    padding: 12px 22px;
+    border: none;
+    border-radius: 8px;
+    background: #111111;
+    color: white;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.admin-form button:hover {
+    background: #d6b56d;
+    color: black;
+}
+
+.admin-list {
+    display: grid;
+    gap: 16px;
+}
+
+.admin-entry {
+    background: white;
+    padding: 22px;
+    border-radius: 8px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+}
+
+.admin-entry span,
+.error {
+    color: #8a2f2f;
+    font-weight: 600;
 }
 
 footer {

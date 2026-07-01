@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="admin-panel">
+    <div class="admin-header">
+        <h1>Admin Dashboard</h1>
+        <a class="button" href="/admin/logout">Log Out</a>
+    </div>
+
+    <h2>Add Website Content</h2>
+    <form method="POST" enctype="multipart/form-data" class="admin-form">
+        <label for="section">Page</label>
+        <select id="section" name="section">
+            <option value="home">Home</option>
+            <option value="about">About Me</option>
+            <option value="experiences">Experiences</option>
+            <option value="projects">Projects</option>
+            <option value="leadership">Leadership</option>
+        </select>
+
+        <label for="title">Title</label>
+        <input id="title" name="title" required>
+
+        <label for="description">Information</label>
+        <textarea id="description" name="description" rows="5" required></textarea>
+
+        <label for="image">Picture</label>
+        <input id="image" name="image" type="file" accept="image/png,image/jpeg,image/gif,image/webp">
+
+        <button type="submit">Add to Website</button>
+    </form>
+
+    <h2>AI Assistant Questions</h2>
+    <div class="admin-list">
+        {% for item in questions %}
+        <div class="admin-entry">
+            <span>{{ item.created_at }}</span>
+            <h3>{{ item.question }}</h3>
+            <p>{{ item.reply }}</p>
+        </div>
+        {% else %}
+        <p>No AI assistant questions yet.</p>
+        {% endfor %}
+    </div>
+
+    <h2>Added Website Content</h2>
+    <div class="grid">
+        {% for item in site_items %}
+        <div class="card">
+            {% if item.image_url %}
+            <img class="card-image" src="{{ item.image_url }}" alt="{{ item.title }}">
+            {% endif %}
+            <span>{{ item.section }}</span>
+            <h3>{{ item.title }}</h3>
+            <p>{{ item.description }}</p>
+        </div>
+        {% else %}
+        <p>No added content yet.</p>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}
