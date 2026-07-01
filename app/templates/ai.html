@@ -32,6 +32,11 @@
 {% endfor %}
 
 <script>
+const chatStorageKey = "ethanAssistantChat";
+const greeting = "Hello! Ask me any question about Ethan's research, projects, leadership, or interests!";
+
+document.addEventListener("DOMContentLoaded", loadChatHistory);
+
 async function sendMessage() {
     const input = document.getElementById("user-input");
     const chatWindow = document.getElementById("chat-window");
@@ -50,14 +55,17 @@ async function sendMessage() {
 
     const data = await response.json();
     addMessage("Assistant", data.reply);
+    saveChatHistory();
     chatWindow.scrollTop = chatWindow.scrollHeight;
 }
 
-function addMessage(sender, text) {
+function addMessage(sender, text, persist = true) {
     const chatWindow = document.getElementById("chat-window");
     const message = document.createElement("p");
     const label = document.createElement("strong");
 
+    message.dataset.sender = sender;
+    message.dataset.text = text;
     label.textContent = `${sender}: `;
     message.appendChild(label);
     if (sender === "Assistant") {
@@ -68,6 +76,8 @@ function addMessage(sender, text) {
         message.appendChild(document.createTextNode(text));
     }
     chatWindow.appendChild(message);
+
+    if (persist) saveChatHistory();
 }
 
 function formatAssistantText(text) {
@@ -79,6 +89,31 @@ function formatAssistantText(text) {
     return escaped
         .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
         .replace(/\*(.*?)\*/g, "<em>$1</em>");
+}
+
+function loadChatHistory() {
+    const chatWindow = document.getElementById("chat-window");
+    const saved = JSON.parse(localStorage.getItem(chatStorageKey) || "[]");
+
+    chatWindow.innerHTML = "";
+
+    if (saved.length === 0) {
+        addMessage("Assistant", greeting);
+        return;
+    }
+
+    saved.forEach((item) => addMessage(item.sender, item.text, false));
+    chatWindow.scrollTop = chatWindow.scrollHeight;
+}
+
+function saveChatHistory() {
+    const chatWindow = document.getElementById("chat-window");
+    const messages = Array.from(chatWindow.querySelectorAll("p")).map((message) => ({
+        sender: message.dataset.sender,
+        text: message.dataset.text
+    })).filter((message) => message.sender && message.text);
+
+    localStorage.setItem(chatStorageKey, JSON.stringify(messages));
 }
 </script>
 {% endblock %}

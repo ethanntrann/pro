@@ -1,8 +1,12 @@
 body {
     margin: 0;
-    background: #f8f5ef;
+    background: #faf8f4;
     color: #1f1f1f;
     font-family: 'Inter', sans-serif;
+}
+
+html {
+    scroll-behavior: smooth;
 }
 
 nav {
@@ -10,9 +14,13 @@ nav {
     justify-content: space-between;
     align-items: center;
     padding: 24px 55px;
-    background: #111111;
+    background: rgba(17, 17, 17, 0.96);
     color: white;
     flex-wrap: wrap;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    backdrop-filter: blur(10px);
 }
 
 nav h2 {
@@ -37,6 +45,9 @@ section {
     max-width: 1050px;
     margin: 60px auto;
     padding: 25px;
+    animation: fade-up both;
+    animation-timeline: view();
+    animation-range: entry 5% cover 25%;
 }
 
 .hero {
@@ -46,6 +57,7 @@ section {
     gap: 44px;
     align-items: center;
     justify-content: center;
+    border-bottom: 1px solid rgba(17,17,17,0.08);
 }
 
 .hero-copy {
@@ -103,7 +115,7 @@ p {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 12px;
+    gap: 16px;
     flex-wrap: wrap;
     max-width: 1050px;
     margin: 0 auto 20px;
@@ -115,32 +127,32 @@ p {
     color: #111111;
     font-weight: 700;
     text-decoration: none;
-    border-bottom: 2px solid #d6b56d;
+    border: 1px solid rgba(17,17,17,0.15);
+    border-radius: 8px;
+    padding: 10px 18px;
+    background: white;
+    min-width: 92px;
 }
 
 .quick-contact a:hover {
-    color: #8a6d2f;
+    background: #111111;
+    color: white;
 }
 
 .quick-contact span {
     color: #666;
 }
 
-.admin-page-tools {
+.inline-admin-panel {
     max-width: 1050px;
-    margin: 0 auto 12px;
-    padding: 0 25px;
-    text-align: center;
+    background: #fffdf8;
+    border: 1px solid rgba(138,109,47,0.28);
+    border-radius: 8px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
 }
 
-.admin-page-tools a {
-    display: inline-block;
-    padding: 10px 16px;
-    background: #d6b56d;
-    color: #111111;
-    border-radius: 8px;
-    font-weight: 700;
-    text-decoration: none;
+.inline-admin-panel h2 {
+    margin-top: 0;
 }
 
 .grid {
@@ -154,6 +166,12 @@ p {
     padding: 28px;
     border-radius: 8px;
     box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+    transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 14px 30px rgba(0,0,0,0.12);
 }
 
 .card-image {
@@ -416,6 +434,11 @@ p {
     margin-top: 12px;
 }
 
+.admin-empty-note {
+    color: #666;
+    font-size: 16px;
+}
+
 .danger-button {
     padding: 10px 16px;
     border: none;
@@ -454,4 +477,29 @@ footer {
     text-align: center;
     padding: 30px;
     color: #555;
+}
+
+@keyframes fade-up {
+    from {
+        opacity: 0;
+        transform: translateY(24px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+
+    section {
+        animation: none;
+    }
+
+    .card {
+        transition: none;
+    }
 }

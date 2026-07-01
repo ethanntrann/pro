@@ -230,6 +230,9 @@ def analytics_summary(visits):
         "recent_visits": recent_visits
     }
 
+def editor_items(section):
+    return get_site_items(section) if session.get("is_admin") else []
+
 def admin_required(view):
     @wraps(view)
     def wrapped_view(*args, **kwargs):
@@ -241,12 +244,12 @@ def admin_required(view):
 @app.route("/")
 def home():
     track_visit("home")
-    return render_template("index.html", site_sections=page_sections("home"), current_page="home")
+    return render_template("index.html", site_sections=page_sections("home"), current_page="home", editor_items=editor_items("home"))
 
 @app.route("/about")
 def about():
     track_visit("about")
-    return render_template("about.html", site_sections=page_sections("about"), current_page="about")
+    return render_template("about.html", site_sections=page_sections("about"), current_page="about", editor_items=editor_items("about"))
 
 @app.route("/research")
 def research():
@@ -258,23 +261,24 @@ def research():
         research_interests=research_interests,
         relevant_courses=relevant_courses,
         site_sections=page_sections("experiences"),
-        current_page="experiences"
+        current_page="experiences",
+        editor_items=editor_items("experiences")
     )
 
 @app.route("/projects")
 def projects_page():
     track_visit("projects")
-    return render_template("projects.html", projects=projects, site_sections=page_sections("projects"), current_page="projects")
+    return render_template("projects.html", projects=projects, site_sections=page_sections("projects"), current_page="projects", editor_items=editor_items("projects"))
 
 @app.route("/leadership")
 def leadership_page():
     track_visit("leadership")
-    return render_template("leadership.html", leadership=leadership, site_sections=page_sections("leadership"), current_page="leadership")
+    return render_template("leadership.html", leadership=leadership, site_sections=page_sections("leadership"), current_page="leadership", editor_items=editor_items("leadership"))
 
 @app.route("/awards")
 def awards_page():
     track_visit("awards")
-    return render_template("awards.html", awards=awards, site_sections=page_sections("awards"), current_page="awards")
+    return render_template("awards.html", awards=awards, site_sections=page_sections("awards"), current_page="awards", editor_items=editor_items("awards"))
 
 @app.route("/resume")
 def resume():
@@ -283,12 +287,12 @@ def resume():
 @app.route("/contact")
 def contact():
     track_visit("contact")
-    return render_template("contact.html", site_sections=page_sections("contact"), current_page="contact")
+    return render_template("contact.html", site_sections=page_sections("contact"), current_page="contact", editor_items=editor_items("contact"))
 
 @app.route("/ai")
 def ai():
     track_visit("help")
-    return render_template("ai.html", site_sections=page_sections("help"), current_page="help")
+    return render_template("ai.html", site_sections=page_sections("help"), current_page="help", editor_items=editor_items("help"))
 
 @app.route("/chat", methods=["POST"])
 def chat():
@@ -358,15 +362,7 @@ def admin_dashboard():
             image_url = f"/static/uploads/{timestamped_filename}"
 
         if title and description:
-            data["site_items"].insert(0, {
-                "id": uuid4().hex,
-                "title": title,
-                "description": description,
-                "section": section,
-                "heading": heading,
-                "image_url": image_url,
-                "created_at": datetime.now().strftime("%Y-%m-%d %I:%M %p")
-            })
+            data["site_items"].insert(0, build_site_item(title, description, section, heading, image_url))
             save_data(data)
             return redirect(url_for("admin_dashboard", page=section))
 
@@ -377,6 +373,46 @@ def admin_dashboard():
         selected_page=selected_page,
         analytics=analytics_summary(data["visits"])
     )
+
+def build_site_item(title, description, section, heading, image_url):
+    return {
+        "id": uuid4().hex,
+        "title": title,
+        "description": description,
+        "section": section,
+        "heading": heading,
+        "image_url": image_url,
+        "created_at": datetime.now().strftime("%Y-%m-%d %I:%M %p")
+    }
+
+def safe_return_path():
+    return_path = request.form.get("return_path", "/admin/dashboard")
+    if not return_path.startswith("/") or return_path.startswith("//"):
+        return "/admin/dashboard"
+    return return_path
+
+@app.route("/admin/inline-content", methods=["POST"])
+@admin_required
+def add_inline_site_item():
+    data = load_data()
+    title = request.form.get("title", "").strip()
+    description = request.form.get("description", "").strip()
+    section = request.form.get("section", "home")
+    heading = request.form.get("heading", "").strip()
+    image = request.files.get("image")
+    image_url = ""
+
+    if image and image.filename and allowed_file(image.filename):
+        filename = secure_filename(image.filename)
+        timestamped_filename = f"{datetime.now().strftime('%Y%m%d%H%M%S')}_{filename}"
+        image.save(os.path.join(UPLOAD_FOLDER, timestamped_filename))
+        image_url = f"/static/uploads/{timestamped_filename}"
+
+    if title and description:
+        data["site_items"].insert(0, build_site_item(title, description, section, heading, image_url))
+        save_data(data)
+
+    return redirect(safe_return_path())
 
 @app.route("/admin/content/<item_id>/update", methods=["POST"])
 @admin_required
@@ -399,6 +435,8 @@ def update_site_item(item_id):
             break
 
     save_data(data)
+    if request.form.get("return_path"):
+        return redirect(safe_return_path())
     return redirect(url_for("admin_dashboard", page=request.form.get("section", "home")))
 
 @app.route("/admin/content/<item_id>/delete", methods=["POST"])
@@ -407,6 +445,8 @@ def delete_site_item(item_id):
     data = load_data()
     data["site_items"] = [item for item in data["site_items"] if item.get("id") != item_id]
     save_data(data)
+    if request.form.get("return_path"):
+        return redirect(safe_return_path())
     return redirect(url_for("admin_dashboard"))
 
 @app.route("/admin/logout")

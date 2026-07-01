@@ -25,17 +25,61 @@
 {% block content %}{% endblock %}
 
 {% if session.get("is_admin") and current_page %}
-<div class="admin-page-tools">
-    <a href="/admin/dashboard?page={{ current_page }}">Edit This Page</a>
-</div>
+<section class="inline-admin-panel">
+    <h2>Edit This Page</h2>
+    <form method="POST" action="/admin/inline-content" enctype="multipart/form-data" class="admin-form">
+        <input type="hidden" name="section" value="{{ current_page }}">
+        <input type="hidden" name="return_path" value="{{ request.path }}">
+
+        <label for="inline-heading">Section Name</label>
+        <input id="inline-heading" name="heading" placeholder="Example: Featured Work, Updates, Gallery">
+
+        <label for="inline-title">Title</label>
+        <input id="inline-title" name="title" placeholder="Short title" required>
+
+        <label for="inline-description">Information</label>
+        <textarea id="inline-description" name="description" rows="5" placeholder="Add text directly to this page." required></textarea>
+
+        <label for="inline-image">Picture</label>
+        <input id="inline-image" name="image" type="file" accept="image/png,image/jpeg,image/gif,image/webp">
+
+        <button type="submit">Add to This Page</button>
+    </form>
+
+    <div class="admin-content-list">
+        {% for item in editor_items %}
+        <div class="admin-content-item">
+            {% if item.image_url %}
+            <img class="card-image" src="{{ item.image_url }}" alt="{{ item.title }}">
+            {% endif %}
+            <form method="POST" action="/admin/content/{{ item.id }}/update" enctype="multipart/form-data" class="inline-edit-form">
+                <input type="hidden" name="section" value="{{ current_page }}">
+                <input type="hidden" name="return_path" value="{{ request.path }}">
+                <label>Section Name</label>
+                <input name="heading" value="{{ item.heading }}">
+                <label>Title</label>
+                <input name="title" value="{{ item.title }}" required>
+                <label>Information</label>
+                <textarea name="description" rows="4" required>{{ item.description }}</textarea>
+                <label>Replace Picture</label>
+                <input name="image" type="file" accept="image/png,image/jpeg,image/gif,image/webp">
+                <button type="submit">Save on This Page</button>
+            </form>
+            <form method="POST" action="/admin/content/{{ item.id }}/delete" class="delete-form">
+                <input type="hidden" name="return_path" value="{{ request.path }}">
+                <button class="danger-button" type="submit">Delete</button>
+            </form>
+        </div>
+        {% else %}
+        <p class="admin-empty-note">No custom sections have been added to this page yet.</p>
+        {% endfor %}
+    </div>
+</section>
 {% endif %}
 
 <div class="quick-contact" aria-label="Quick contact links">
-    <a href="mailto:ethanlytran@gmail.com">ethanlytran@gmail.com</a>
-    <span>or</span>
-    <a href="tel:6262423764">626-242-3764</a>
-    <span>or</span>
-    <a href="sms:6262423764">Message</a>
+    <a href="mailto:ethanlytran@gmail.com">Email</a>
+    <a href="tel:6262423764">Call/Text</a>
 </div>
 
 <footer>
