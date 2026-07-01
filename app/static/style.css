@@ -437,7 +437,8 @@ p {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     font-weight: 800;
-    background-size: 120% 100%;
+    background-size: 240% 100%;
+    animation: organization-gradient-flow 4s ease-in-out infinite alternate;
 }
 
 .role-red-cross {
@@ -458,6 +459,15 @@ p {
 
 .role-fbla {
     background-image: linear-gradient(90deg, #003f87 0%, #00529b 38%, #d71920 100%);
+}
+
+@keyframes organization-gradient-flow {
+    from {
+        background-position: 0% 50%;
+    }
+    to {
+        background-position: 100% 50%;
+    }
 }
 
 .card-image {
@@ -810,5 +820,9 @@ footer {
 
     .card {
         transition: none;
+    }
+
+    .role-title {
+        animation: none;
     }
 }
