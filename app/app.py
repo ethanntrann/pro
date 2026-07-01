@@ -2,6 +2,7 @@ import json
 import os
 from datetime import datetime
 from functools import wraps
+from uuid import uuid4
 
 from flask import Flask, render_template, request, jsonify, redirect, session, url_for
 from openrouter import OpenRouter
@@ -71,23 +72,48 @@ projects = [
 leadership = [
     {
         "title": "President of American Red Cross Club",
-        "description": "Lead club meetings, organize service opportunities, and help students support humanitarian work through volunteering, preparedness, and community outreach."
+        "description": "Lead club meetings, coordinate volunteer opportunities, and help students support humanitarian work through service, emergency preparedness, blood-donation awareness, and community outreach."
     },
     {
-        "title": "FBLA",
-        "description": "Developed leadership, business, communication, and teamwork skills."
+        "title": "Competitive Events Officer for FBLA",
+        "description": "Support members as they prepare for business, finance, technology, and presentation competitions. Help organize practice resources, explain event expectations, encourage chapter participation, and strengthen the team's communication, professionalism, and competitive readiness."
     },
     {
-        "title": "Research Club",
-        "description": "Interested in helping students explore research and STEM opportunities."
+        "title": "President of Basketball for Kids",
+        "description": "Lead a service club that teaches elementary school students the fundamentals of basketball, including dribbling, passing, shooting, teamwork, sportsmanship, and confidence. Organize lessons that make athletics accessible, encouraging, and fun for younger students."
     },
     {
-        "title": "Volunteering",
-        "description": "Gained experience serving others and learning about healthcare environments."
+        "title": "President of Asian Pacific Islander Student Union (APISU)",
+        "description": "Guide a student organization dedicated to building community, cultural awareness, and advocacy for Asian Pacific Islander Americans. Plan meetings and activities that celebrate identity, create belonging, and encourage thoughtful conversations about representation and service."
     },
     {
-        "title": "Community Service",
-        "description": "Committed to supporting my community through service and leadership."
+        "title": "Vice President of Key Club",
+        "description": "Help lead a service-focused organization by supporting meeting planning, member engagement, volunteer coordination, and communication between officers and club members. Work to create meaningful service opportunities that encourage students to contribute consistently to their school and local community."
+    }
+]
+
+awards = [
+    {
+        "section": "Service and Advocacy",
+        "items": [
+            "Humanitarian and International Law Advocate",
+            "President's Volunteer Service Award - Gold"
+        ]
+    },
+    {
+        "section": "FBLA Awards",
+        "items": [
+            "1st Place Regional - Introduction to Financial Math",
+            "6th Place Regional - Introduction to Information Technology",
+            "4th Place State - Sports and Entertainment Management",
+            "9th Place State - Digital Video Production"
+        ]
+    },
+    {
+        "section": "HOSA Awards",
+        "items": [
+            "8th Place - Creative Problem Solving"
+        ]
     }
 ]
 
@@ -97,7 +123,12 @@ Answer questions about Ethan professionally and briefly.
 
 Ethan is interested in medicine, cancer biology, stem cell biology,
 research, computer science, hackathons, volunteering, FBLA, leadership,
-and building technology that helps people.
+and building technology that helps people. He has taken college-level
+biology and AP Chemistry, enjoys building computers, plays basketball,
+has hundreds of community service hours, and has leadership roles in
+American Red Cross Club, FBLA, Basketball for Kids, APISU, and Key Club.
+He has earned awards in FBLA, HOSA, humanitarian and international law
+advocacy, and the President's Volunteer Service Award - Gold.
 
 Keep answers short, polished, and helpful.
 """
@@ -107,7 +138,22 @@ def load_data():
         return {"assistant_questions": [], "site_items": []}
 
     with open(DATA_FILE, "r", encoding="utf-8") as file:
-        return json.load(file)
+        data = json.load(file)
+
+    data.setdefault("assistant_questions", [])
+    data.setdefault("site_items", [])
+    changed = False
+
+    for item in data["site_items"]:
+        if "id" not in item:
+            item["id"] = uuid4().hex
+            changed = True
+        item.setdefault("heading", "")
+
+    if changed:
+        save_data(data)
+
+    return data
 
 def save_data(data):
     with open(DATA_FILE, "w", encoding="utf-8") as file:
@@ -120,6 +166,13 @@ def get_site_items(section):
     data = load_data()
     return [item for item in data["site_items"] if item["section"] == section]
 
+def page_sections(section):
+    sections = {}
+    for item in get_site_items(section):
+        heading = item.get("heading") or "Added Updates"
+        sections.setdefault(heading, []).append(item)
+    return sections
+
 def admin_required(view):
     @wraps(view)
     def wrapped_view(*args, **kwargs):
@@ -130,11 +183,11 @@ def admin_required(view):
 
 @app.route("/")
 def home():
-    return render_template("index.html", site_items=get_site_items("home"))
+    return render_template("index.html", site_sections=page_sections("home"))
 
 @app.route("/about")
 def about():
-    return render_template("about.html", site_items=get_site_items("about"))
+    return render_template("about.html", site_sections=page_sections("about"))
 
 @app.route("/research")
 def research():
@@ -143,20 +196,24 @@ def research():
         research_experiences=research_experiences,
         publications=publications,
         research_interests=research_interests,
-        site_items=get_site_items("experiences")
+        site_sections=page_sections("experiences")
     )
 
 @app.route("/projects")
 def projects_page():
-    return render_template("projects.html", projects=projects, site_items=get_site_items("projects"))
+    return render_template("projects.html", projects=projects, site_sections=page_sections("projects"))
 
 @app.route("/leadership")
 def leadership_page():
-    return render_template("leadership.html", leadership=leadership, site_items=get_site_items("leadership"))
+    return render_template("leadership.html", leadership=leadership, site_sections=page_sections("leadership"))
+
+@app.route("/awards")
+def awards_page():
+    return render_template("awards.html", awards=awards, site_sections=page_sections("awards"))
 
 @app.route("/resume")
 def resume():
-    return render_template("resume.html")
+    return redirect(url_for("static", filename="files/ethan-tran-resume.pdf"))
 
 @app.route("/contact")
 def contact():
@@ -222,6 +279,7 @@ def admin_dashboard():
         title = request.form.get("title", "").strip()
         description = request.form.get("description", "").strip()
         section = request.form.get("section", "home")
+        heading = request.form.get("heading", "").strip()
         image = request.files.get("image")
         image_url = ""
 
@@ -233,9 +291,11 @@ def admin_dashboard():
 
         if title and description:
             data["site_items"].insert(0, {
+                "id": uuid4().hex,
                 "title": title,
                 "description": description,
                 "section": section,
+                "heading": heading,
                 "image_url": image_url,
                 "created_at": datetime.now().strftime("%Y-%m-%d %I:%M %p")
             })
@@ -247,6 +307,14 @@ def admin_dashboard():
         questions=data["assistant_questions"],
         site_items=data["site_items"]
     )
+
+@app.route("/admin/content/<item_id>/delete", methods=["POST"])
+@admin_required
+def delete_site_item(item_id):
+    data = load_data()
+    data["site_items"] = [item for item in data["site_items"] if item.get("id") != item_id]
+    save_data(data)
+    return redirect(url_for("admin_dashboard"))
 
 @app.route("/admin/logout")
 def admin_logout():

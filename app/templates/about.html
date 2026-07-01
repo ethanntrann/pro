@@ -12,12 +12,24 @@
         I have developed a strong interest in healthcare, innovation, and community impact.
     </p>
     <p>
+        I have taken many courses to further these interests, including college-level
+        biology and AP Chemistry, while also learning through hands-on experiences
+        such as building computers and exploring how technology can support healthcare
+        and problem solving.
+    </p>
+    <p>
+        Community service has also shaped who I am. With hundreds of hours dedicated
+        to serving others, I have learned the importance of consistency, empathy,
+        leadership, and using my time to make a positive impact.
+    </p>
+    <p>
         In my free time, I also enjoy playing basketball.
     </p>
 
-    {% if site_items %}
+    {% for heading, items in site_sections.items() %}
+    <h2>{{ heading }}</h2>
     <div class="grid">
-        {% for item in site_items %}
+        {% for item in items %}
         <div class="card">
             {% if item.image_url %}
             <img class="card-image" src="{{ item.image_url }}" alt="{{ item.title }}">
@@ -27,6 +39,6 @@
         </div>
         {% endfor %}
     </div>
-    {% endif %}
+    {% endfor %}
 </section>
 {% endblock %}

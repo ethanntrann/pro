@@ -2,19 +2,22 @@
 
 {% block content %}
 <section class="hero">
-    <h1>Hi, I'm Ethan Tran.</h1>
-    <p>
-        I am a student interested in medicine, research, cancer biology,
-        computer science, leadership, and building technology that helps people.
-    </p>
-    <a class="button" href="/projects">View My Work</a>
+    <div class="hero-copy">
+        <h1>Hi, I'm Ethan Tran.</h1>
+        <p>
+            I am a student interested in medicine, research, cancer biology,
+            computer science, leadership, and building technology that helps people.
+        </p>
+        <a class="button" href="/projects">View My Work</a>
+    </div>
+    <img class="headshot" src="/static/images/ethan-tran-headshot.png" alt="Ethan Tran professional headshot">
 </section>
 
-{% if site_items %}
+{% for heading, items in site_sections.items() %}
 <section>
-    <h2>Featured Updates</h2>
+    <h2>{{ heading }}</h2>
     <div class="grid">
-        {% for item in site_items %}
+        {% for item in items %}
         <div class="card">
             {% if item.image_url %}
             <img class="card-image" src="{{ item.image_url }}" alt="{{ item.title }}">
@@ -25,5 +28,5 @@
         {% endfor %}
     </div>
 </section>
-{% endif %}
+{% endfor %}
 {% endblock %}

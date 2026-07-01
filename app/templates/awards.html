@@ -2,13 +2,17 @@
 
 {% block content %}
 <section>
-    <h1>Leadership</h1>
+    <h1>Awards</h1>
 
     <div class="grid">
-        {% for item in leadership %}
+        {% for group in awards %}
         <div class="card">
-            <h2>{{ item.title }}</h2>
-            <p>{{ item.description }}</p>
+            <h2>{{ group.section }}</h2>
+            <ul class="award-list">
+                {% for item in group["items"] %}
+                <li>{{ item }}</li>
+                {% endfor %}
+            </ul>
         </div>
         {% endfor %}
     </div>

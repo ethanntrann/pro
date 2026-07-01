@@ -7,28 +7,40 @@
         <a class="button" href="/admin/logout">Log Out</a>
     </div>
 
-    <h2>Add Website Content</h2>
-    <form method="POST" enctype="multipart/form-data" class="admin-form">
-        <label for="section">Page</label>
-        <select id="section" name="section">
-            <option value="home">Home</option>
-            <option value="about">About Me</option>
-            <option value="experiences">Experiences</option>
-            <option value="projects">Projects</option>
-            <option value="leadership">Leadership</option>
-        </select>
+    <h2>Page Builder</h2>
+    <div class="builder-layout">
+        <form method="POST" enctype="multipart/form-data" class="admin-form">
+            <label for="section">Page</label>
+            <select id="section" name="section">
+                <option value="home">Home</option>
+                <option value="about">About Me</option>
+                <option value="experiences">Experiences</option>
+                <option value="projects">Projects</option>
+                <option value="leadership">Leadership</option>
+                <option value="awards">Awards</option>
+            </select>
 
-        <label for="title">Title</label>
-        <input id="title" name="title" required>
+            <label for="heading">Section Name</label>
+            <input id="heading" name="heading" placeholder="Example: Featured Work, Volunteering, Gallery">
 
-        <label for="description">Information</label>
-        <textarea id="description" name="description" rows="5" required></textarea>
+            <label for="title">Title</label>
+            <input id="title" name="title" placeholder="Short title for this block" required>
 
-        <label for="image">Picture</label>
-        <input id="image" name="image" type="file" accept="image/png,image/jpeg,image/gif,image/webp">
+            <label for="description">Information</label>
+            <textarea id="description" name="description" rows="7" placeholder="Add the text you want visitors to see." required></textarea>
 
-        <button type="submit">Add to Website</button>
-    </form>
+            <label for="image">Picture</label>
+            <input id="image" name="image" type="file" accept="image/png,image/jpeg,image/gif,image/webp">
+
+            <button type="submit">Add to Website</button>
+        </form>
+
+        <div class="builder-preview">
+            <h3>Simple Workflow</h3>
+            <p>Pick a page, name the section, add a title and description, then upload a picture if you want one.</p>
+            <p>Each added block appears on the public page and can be removed from the list below.</p>
+        </div>
+    </div>
 
     <h2>AI Assistant Questions</h2>
     <div class="admin-list">
@@ -44,18 +56,23 @@
     </div>
 
     <h2>Added Website Content</h2>
-    <div class="grid">
+    <div class="admin-content-list">
         {% for item in site_items %}
-        <div class="card">
+        <div class="admin-content-item">
             {% if item.image_url %}
             <img class="card-image" src="{{ item.image_url }}" alt="{{ item.title }}">
             {% endif %}
-            <span>{{ item.section }}</span>
+            <span>{{ item.section }}{% if item.heading %} / {{ item.heading }}{% endif %}</span>
             <h3>{{ item.title }}</h3>
             <p>{{ item.description }}</p>
+            <form method="POST" action="/admin/content/{{ item.id }}/delete">
+                <button class="danger-button" type="submit">Delete</button>
+            </form>
         </div>
         {% else %}
-        <p>No added content yet.</p>
+        <div class="admin-content-item">
+            <p>No added content yet.</p>
+        </div>
         {% endfor %}
     </div>
 </section>
