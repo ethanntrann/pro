@@ -20,6 +20,7 @@ ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif", "webp"}
 ALLOWED_MEDIA_EXTENSIONS = {"png", "jpg", "jpeg", "gif", "webp", "pdf"}
 IMAGE_EXTENSIONS = {"png", "jpg", "jpeg", "gif", "webp"}
 LINKEDIN_URL = "https://www.linkedin.com/in/ethanlytran"
+GITHUB_URL = "https://github.com/ethanntrann"
 
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
@@ -57,7 +58,7 @@ projects = [
     },
     {
         "title": "Blossom Project",
-        "description": "A project focused on helping people form groups and create ideas during hackathons.",
+        "description": "Blossom is a platform that utilizes Human Bingo to foster connection between participants at events, encouraging human connection and acting as an icebreaker.",
         "skills": "AI, Human Interaction, Research"
     },
     {
@@ -321,7 +322,7 @@ def resume():
 @app.route("/contact")
 def contact():
     track_visit("contact")
-    return render_template("contact.html", linkedin_url=LINKEDIN_URL, site_sections=page_sections("contact"), current_page="contact", editor_items=editor_items("contact"))
+    return render_template("contact.html", linkedin_url=LINKEDIN_URL, github_url=GITHUB_URL, site_sections=page_sections("contact"), current_page="contact", editor_items=editor_items("contact"))
 
 @app.route("/ai")
 def ai():

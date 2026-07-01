@@ -229,6 +229,39 @@ section {
     color: #111111;
 }
 
+.contact-socials {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.github-logo {
+    width: 48px;
+    height: 48px;
+    display: inline-grid;
+    place-items: center;
+    border-radius: 8px;
+    background: #111111;
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: 900;
+    font-family: Arial, sans-serif;
+    letter-spacing: 0;
+}
+
+.github-logo-small {
+    width: 38px;
+    height: 38px;
+    font-size: 14px;
+    background: #111111;
+}
+
+.github-logo-small:hover {
+    background: #d6b56d;
+    color: #111111;
+}
+
 .resume-cta {
     display: inline-block;
     padding: 16px 30px;
@@ -524,6 +557,43 @@ p {
     padding: 14px;
     border-radius: 8px;
     margin-bottom: 14px;
+}
+
+.typing-indicator {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.typing-dot {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    margin-left: 3px;
+    border-radius: 50%;
+    background: #8a6d2f;
+    animation: typing-pulse 900ms ease-in-out infinite;
+}
+
+.typing-dot:nth-child(2) {
+    animation-delay: 120ms;
+}
+
+.typing-dot:nth-child(3) {
+    animation-delay: 240ms;
+}
+
+@keyframes typing-pulse {
+    0%,
+    80%,
+    100% {
+        transform: translateY(0);
+        opacity: 0.45;
+    }
+    40% {
+        transform: translateY(-4px);
+        opacity: 1;
+    }
 }
 
 .chat-controls {
@@ -823,6 +893,10 @@ footer {
     }
 
     .role-title {
+        animation: none;
+    }
+
+    .typing-dot {
         animation: none;
     }
 }

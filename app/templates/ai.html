@@ -49,15 +49,23 @@ async function sendMessage() {
 
     addMessage("You", message);
     input.value = "";
+    const typingIndicator = showTypingIndicator();
 
-    const response = await fetch("/chat", {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({message: message})
-    });
+    try {
+        const response = await fetch("/chat", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({message: message})
+        });
 
-    const data = await response.json();
-    addMessage("Assistant", data.reply);
+        const data = await response.json();
+        typingIndicator.remove();
+        addMessage("Assistant", data.reply);
+    } catch (error) {
+        typingIndicator.remove();
+        addMessage("Assistant", "Sorry, I had trouble responding. Please try again.");
+    }
+
     saveChatHistory();
     chatWindow.scrollTop = chatWindow.scrollHeight;
 }
@@ -85,6 +93,25 @@ function addMessage(sender, text, persist = true) {
     chatWindow.appendChild(message);
 
     if (persist) saveChatHistory();
+}
+
+function showTypingIndicator() {
+    const chatWindow = document.getElementById("chat-window");
+    const message = document.createElement("p");
+    const label = document.createElement("strong");
+    const dots = document.createElement("span");
+
+    message.className = "typing-indicator";
+    label.textContent = "Assistant: ";
+    dots.setAttribute("aria-label", "Assistant is typing");
+    dots.innerHTML = '<span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span>';
+
+    message.appendChild(label);
+    message.appendChild(dots);
+    chatWindow.appendChild(message);
+    chatWindow.scrollTop = chatWindow.scrollHeight;
+
+    return message;
 }
 
 function formatAssistantText(text) {
