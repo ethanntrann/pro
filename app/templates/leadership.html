@@ -7,7 +7,7 @@
     <div class="grid">
         {% for item in leadership %}
         <div class="card">
-            <h2>{{ item.title }}</h2>
+            <h2 class="role-title {% if 'Red Cross' in item.title %}role-red-cross{% elif 'WeBall' in item.title %}role-weball{% elif 'APISU' in item.title %}role-apisu{% elif 'Key Club' in item.title %}role-key{% elif 'FBLA' in item.title %}role-fbla{% endif %}">{{ item.title }}</h2>
             <p>{{ item.description }}</p>
         </div>
         {% endfor %}
@@ -23,6 +23,9 @@
             {% endif %}
             <h2>{{ item.title }}</h2>
             <p>{{ item.description }}</p>
+            {% if item.file_url %}
+            <a class="file-link" href="{{ item.file_url }}" target="_blank">{{ item.file_name or "Open PDF" }}</a>
+            {% endif %}
         </div>
         {% endfor %}
     </div>

@@ -11,16 +11,24 @@
     <h2>Ethan Tran</h2>
     <div>
         <a href="/">Home</a>
-        <a href="/about">About Me</a>
         <a href="/research">Research</a>
-        <a href="/projects">Projects</a>
         <a href="/awards">Awards</a>
         <a href="/leadership">Leadership</a>
         <a href="/resume" target="_blank">Resume</a>
         <a href="/contact">Contact</a>
         <a href="/ai">Help</a>
+        <button class="search-toggle" type="button" onclick="openSearch()" aria-label="Search website">⌕</button>
     </div>
 </nav>
+
+<div id="search-overlay" class="search-overlay" hidden>
+    <div class="search-panel">
+        <button class="search-close" type="button" onclick="closeSearch()" aria-label="Close search">×</button>
+        <h2>Search</h2>
+        <input id="site-search-input" type="search" placeholder="Search Ethan's website..." oninput="runSiteSearch()">
+        <div id="site-search-results" class="search-results"></div>
+    </div>
+</div>
 
 {% block content %}{% endblock %}
 
@@ -40,8 +48,8 @@
         <label for="inline-description">Information</label>
         <textarea id="inline-description" name="description" rows="5" placeholder="Add text directly to this page." required></textarea>
 
-        <label for="inline-image">Picture</label>
-        <input id="inline-image" name="image" type="file" accept="image/png,image/jpeg,image/gif,image/webp">
+        <label for="inline-media">Media</label>
+        <input id="inline-media" name="media" type="file" accept="image/png,image/jpeg,image/gif,image/webp,application/pdf">
 
         <button type="submit">Add to This Page</button>
     </form>
@@ -52,6 +60,9 @@
             {% if item.image_url %}
             <img class="card-image" src="{{ item.image_url }}" alt="{{ item.title }}">
             {% endif %}
+            {% if item.file_url %}
+            <a class="file-link" href="{{ item.file_url }}" target="_blank">{{ item.file_name or "Open PDF" }}</a>
+            {% endif %}
             <form method="POST" action="/admin/content/{{ item.id }}/update" enctype="multipart/form-data" class="inline-edit-form">
                 <input type="hidden" name="section" value="{{ current_page }}">
                 <input type="hidden" name="return_path" value="{{ request.path }}">
@@ -61,8 +72,8 @@
                 <input name="title" value="{{ item.title }}" required>
                 <label>Information</label>
                 <textarea name="description" rows="4" required>{{ item.description }}</textarea>
-                <label>Replace Picture</label>
-                <input name="image" type="file" accept="image/png,image/jpeg,image/gif,image/webp">
+                <label>Replace Media</label>
+                <input name="media" type="file" accept="image/png,image/jpeg,image/gif,image/webp,application/pdf">
                 <button type="submit">Save on This Page</button>
             </form>
             <form method="POST" action="/admin/content/{{ item.id }}/delete" class="delete-form">
@@ -79,12 +90,57 @@
 
 <div class="quick-contact" aria-label="Quick contact links">
     <a href="mailto:ethanlytran@gmail.com">Email</a>
-    <a href="tel:6262423764">Call/Text</a>
+    <details class="contact-action">
+        <summary>Call/Text</summary>
+        <div>
+            <a href="tel:6262423764">Call</a>
+            <a href="sms:6262423764">Text</a>
+        </div>
+    </details>
 </div>
 
 <footer>
     <p>© 2026 Ethan Tran</p>
 </footer>
+
+<script>
+const searchIndex = [
+    { title: "Home", url: "/", text: "Ethan Tran Diamond Bar High School medicine research computer science service resume linkedin" },
+    { title: "Research", url: "/research", text: "healthcare internship oncology Dr Bao Dao Pomona Valley Hospital projects courses biology chemistry computer science Blossom AI" },
+    { title: "Awards", url: "/awards", text: "FBLA HOSA President Volunteer Service Award humanitarian international law" },
+    { title: "Leadership", url: "/leadership", text: "Red Cross WeBall APISU Key Club FBLA leadership service" },
+    { title: "Resume", url: "/resume", text: "resume PDF Ethan Tran" },
+    { title: "Contact", url: "/contact", text: "email phone linkedin contact Ethan Tran" },
+    { title: "Help", url: "/ai", text: "assistant questions Ethan research projects leadership interests" }
+];
+
+function openSearch() {
+    document.getElementById("search-overlay").hidden = false;
+    document.getElementById("site-search-input").focus();
+    runSiteSearch();
+}
+
+function closeSearch() {
+    document.getElementById("search-overlay").hidden = true;
+}
+
+function runSiteSearch() {
+    const query = document.getElementById("site-search-input").value.toLowerCase().trim();
+    const results = document.getElementById("site-search-results");
+    const matches = searchIndex.filter((item) => !query || `${item.title} ${item.text}`.toLowerCase().includes(query));
+
+    results.innerHTML = matches.map((item) => `
+        <a class="search-result" href="${item.url}">
+            <strong>${item.title}</strong>
+            <span>${item.text}</span>
+        </a>
+    `).join("");
+}
+
+document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") closeSearch();
+});
+</script>
 
 </body>
 </html>

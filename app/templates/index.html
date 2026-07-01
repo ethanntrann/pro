@@ -4,13 +4,19 @@
 <section class="hero">
     <div class="hero-copy">
         <h1>Hi, I'm Ethan Tran.</h1>
-        <p>
-            I am a student interested in medicine, research, cancer biology,
-            computer science, leadership, and building technology that helps people.
-        </p>
-        <a class="button" href="/projects">View My Work</a>
+        <div class="hero-actions">
+            <a class="button" href="/resume" target="_blank">Resume</a>
+            <a class="linkedin-logo" href="{{ linkedin_url }}" target="_blank" rel="noopener" aria-label="LinkedIn profile">in</a>
+        </div>
     </div>
     <img class="headshot" src="/static/images/ethan-tran-headshot.png" alt="Ethan Tran professional headshot">
+</section>
+
+<section class="home-about">
+    <h1>About Me</h1>
+    {% for paragraph in about_paragraphs %}
+    <p>{{ paragraph }}</p>
+    {% endfor %}
 </section>
 
 {% for heading, items in site_sections.items() %}
@@ -24,6 +30,9 @@
             {% endif %}
             <h3>{{ item.title }}</h3>
             <p>{{ item.description }}</p>
+            {% if item.file_url %}
+            <a class="file-link" href="{{ item.file_url }}" target="_blank">{{ item.file_name or "Open PDF" }}</a>
+            {% endif %}
         </div>
         {% endfor %}
     </div>

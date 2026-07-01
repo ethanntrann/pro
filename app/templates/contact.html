@@ -6,6 +6,7 @@
     <p>Email: ethanlytran@gmail.com</p>
     <p>Phone: 626-242-3764</p>
     <p>Website: ethanlytran.com</p>
+    <p><a class="contact-link" href="{{ linkedin_url }}" target="_blank" rel="noopener">LinkedIn</a></p>
 
     {% for heading, items in site_sections.items() %}
     <h2>{{ heading }}</h2>
@@ -17,6 +18,9 @@
             {% endif %}
             <h2>{{ item.title }}</h2>
             <p>{{ item.description }}</p>
+            {% if item.file_url %}
+            <a class="file-link" href="{{ item.file_url }}" target="_blank">{{ item.file_name or "Open PDF" }}</a>
+            {% endif %}
         </div>
         {% endfor %}
     </div>

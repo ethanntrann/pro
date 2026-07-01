@@ -17,6 +17,9 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_FILE = os.path.join(BASE_DIR, "site_data.json")
 UPLOAD_FOLDER = os.path.join(BASE_DIR, "static", "uploads")
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif", "webp"}
+ALLOWED_MEDIA_EXTENSIONS = {"png", "jpg", "jpeg", "gif", "webp", "pdf"}
+IMAGE_EXTENSIONS = {"png", "jpg", "jpeg", "gif", "webp"}
+LINKEDIN_URL = "https://www.linkedin.com/in/ethanlytran"
 
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
@@ -85,6 +88,13 @@ leadership = [
         "title": "Competitive Events Officer for FBLA",
         "description": "Support members as they prepare for business, finance, technology, and presentation competitions. Help organize practice resources, explain event expectations, encourage chapter participation, and strengthen the team's communication, professionalism, and competitive readiness."
     }
+]
+
+about_paragraphs = [
+    "My name is Ethan Tran. I am a senior at Diamond Bar High School, and I am passionate about medicine, cancer biology, research, computer science, and using technology to solve meaningful problems.",
+    "I have taken many courses to further these interests, including college-level biology and AP Chemistry, while also learning through hands-on experiences such as building computers and exploring how technology can support healthcare and problem solving.",
+    "Community service has also shaped who I am. With hundreds of hours dedicated to serving others, I have learned the importance of consistency, empathy, leadership, and using my time to make a positive impact.",
+    "In my free time, I also enjoy playing basketball."
 ]
 
 relevant_courses = [
@@ -159,6 +169,8 @@ def load_data():
             item["id"] = uuid4().hex
             changed = True
         item.setdefault("heading", "")
+        item.setdefault("file_url", "")
+        item.setdefault("file_name", "")
 
     if changed:
         save_data(data)
@@ -170,7 +182,21 @@ def save_data(data):
         json.dump(data, file, indent=2)
 
 def allowed_file(filename):
-    return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
+    return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_MEDIA_EXTENSIONS
+
+def save_uploaded_media(file):
+    if not file or not file.filename or not allowed_file(file.filename):
+        return "", "", ""
+
+    filename = secure_filename(file.filename)
+    extension = filename.rsplit(".", 1)[1].lower()
+    timestamped_filename = f"{datetime.now().strftime('%Y%m%d%H%M%S')}_{filename}"
+    file.save(os.path.join(UPLOAD_FOLDER, timestamped_filename))
+    media_url = f"/static/uploads/{timestamped_filename}"
+
+    if extension in IMAGE_EXTENSIONS:
+        return media_url, "", filename
+    return "", media_url, filename
 
 def get_site_items(section):
     data = load_data()
@@ -244,7 +270,14 @@ def admin_required(view):
 @app.route("/")
 def home():
     track_visit("home")
-    return render_template("index.html", site_sections=page_sections("home"), current_page="home", editor_items=editor_items("home"))
+    return render_template(
+        "index.html",
+        about_paragraphs=about_paragraphs,
+        linkedin_url=LINKEDIN_URL,
+        site_sections=page_sections("home"),
+        current_page="home",
+        editor_items=editor_items("home")
+    )
 
 @app.route("/about")
 def about():
@@ -258,6 +291,7 @@ def research():
         "research.html",
         research_experiences=research_experiences,
         publications=publications,
+        projects=projects,
         research_interests=research_interests,
         relevant_courses=relevant_courses,
         site_sections=page_sections("experiences"),
@@ -287,7 +321,7 @@ def resume():
 @app.route("/contact")
 def contact():
     track_visit("contact")
-    return render_template("contact.html", site_sections=page_sections("contact"), current_page="contact", editor_items=editor_items("contact"))
+    return render_template("contact.html", linkedin_url=LINKEDIN_URL, site_sections=page_sections("contact"), current_page="contact", editor_items=editor_items("contact"))
 
 @app.route("/ai")
 def ai():
@@ -352,17 +386,11 @@ def admin_dashboard():
         description = request.form.get("description", "").strip()
         section = request.form.get("section", selected_page)
         heading = request.form.get("heading", "").strip()
-        image = request.files.get("image")
-        image_url = ""
-
-        if image and image.filename and allowed_file(image.filename):
-            filename = secure_filename(image.filename)
-            timestamped_filename = f"{datetime.now().strftime('%Y%m%d%H%M%S')}_{filename}"
-            image.save(os.path.join(UPLOAD_FOLDER, timestamped_filename))
-            image_url = f"/static/uploads/{timestamped_filename}"
+        media = request.files.get("media") or request.files.get("image")
+        image_url, file_url, file_name = save_uploaded_media(media)
 
         if title and description:
-            data["site_items"].insert(0, build_site_item(title, description, section, heading, image_url))
+            data["site_items"].insert(0, build_site_item(title, description, section, heading, image_url, file_url, file_name))
             save_data(data)
             return redirect(url_for("admin_dashboard", page=section))
 
@@ -374,7 +402,7 @@ def admin_dashboard():
         analytics=analytics_summary(data["visits"])
     )
 
-def build_site_item(title, description, section, heading, image_url):
+def build_site_item(title, description, section, heading, image_url, file_url="", file_name=""):
     return {
         "id": uuid4().hex,
         "title": title,
@@ -382,6 +410,8 @@ def build_site_item(title, description, section, heading, image_url):
         "section": section,
         "heading": heading,
         "image_url": image_url,
+        "file_url": file_url,
+        "file_name": file_name,
         "created_at": datetime.now().strftime("%Y-%m-%d %I:%M %p")
     }
 
@@ -399,17 +429,11 @@ def add_inline_site_item():
     description = request.form.get("description", "").strip()
     section = request.form.get("section", "home")
     heading = request.form.get("heading", "").strip()
-    image = request.files.get("image")
-    image_url = ""
-
-    if image and image.filename and allowed_file(image.filename):
-        filename = secure_filename(image.filename)
-        timestamped_filename = f"{datetime.now().strftime('%Y%m%d%H%M%S')}_{filename}"
-        image.save(os.path.join(UPLOAD_FOLDER, timestamped_filename))
-        image_url = f"/static/uploads/{timestamped_filename}"
+    media = request.files.get("media") or request.files.get("image")
+    image_url, file_url, file_name = save_uploaded_media(media)
 
     if title and description:
-        data["site_items"].insert(0, build_site_item(title, description, section, heading, image_url))
+        data["site_items"].insert(0, build_site_item(title, description, section, heading, image_url, file_url, file_name))
         save_data(data)
 
     return redirect(safe_return_path())
@@ -425,13 +449,17 @@ def update_site_item(item_id):
             item["heading"] = request.form.get("heading", "").strip()
             item["title"] = request.form.get("title", "").strip()
             item["description"] = request.form.get("description", "").strip()
-            image = request.files.get("image")
+            media = request.files.get("media") or request.files.get("image")
+            image_url, file_url, file_name = save_uploaded_media(media)
 
-            if image and image.filename and allowed_file(image.filename):
-                filename = secure_filename(image.filename)
-                timestamped_filename = f"{datetime.now().strftime('%Y%m%d%H%M%S')}_{filename}"
-                image.save(os.path.join(UPLOAD_FOLDER, timestamped_filename))
-                item["image_url"] = f"/static/uploads/{timestamped_filename}"
+            if image_url:
+                item["image_url"] = image_url
+                item["file_url"] = ""
+                item["file_name"] = ""
+            if file_url:
+                item["file_url"] = file_url
+                item["file_name"] = file_name
+                item["image_url"] = ""
             break
 
     save_data(data)

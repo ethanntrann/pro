@@ -70,8 +70,8 @@
             <label for="description">Information</label>
             <textarea id="description" name="description" rows="7" placeholder="Add the text you want visitors to see." required></textarea>
 
-            <label for="image">Picture</label>
-            <input id="image" name="image" type="file" accept="image/png,image/jpeg,image/gif,image/webp">
+            <label for="media">Media</label>
+            <input id="media" name="media" type="file" accept="image/png,image/jpeg,image/gif,image/webp,application/pdf">
 
             <button type="submit">Add to Website</button>
         </form>
@@ -103,6 +103,9 @@
             {% if item.image_url %}
             <img class="card-image" src="{{ item.image_url }}" alt="{{ item.title }}">
             {% endif %}
+            {% if item.file_url %}
+            <a class="file-link" href="{{ item.file_url }}" target="_blank">{{ item.file_name or "Open PDF" }}</a>
+            {% endif %}
             <span>{{ item.section }}{% if item.heading %} / {{ item.heading }}{% endif %}</span>
             <form method="POST" action="/admin/content/{{ item.id }}/update" enctype="multipart/form-data" class="inline-edit-form">
                 <label>Page</label>
@@ -122,8 +125,8 @@
                 <input name="title" value="{{ item.title }}" required>
                 <label>Information</label>
                 <textarea name="description" rows="4" required>{{ item.description }}</textarea>
-                <label>Replace Picture</label>
-                <input name="image" type="file" accept="image/png,image/jpeg,image/gif,image/webp">
+                <label>Replace Media</label>
+                <input name="media" type="file" accept="image/png,image/jpeg,image/gif,image/webp,application/pdf">
                 <button type="submit">Save Changes</button>
             </form>
             <form method="POST" action="/admin/content/{{ item.id }}/delete" class="delete-form">
