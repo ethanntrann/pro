@@ -11,5 +11,22 @@
         Through volunteering, internships, hackathon projects, and leadership activities,
         I have developed a strong interest in healthcare, innovation, and community impact.
     </p>
+    <p>
+        In my free time, I also enjoy playing basketball.
+    </p>
+
+    {% if site_items %}
+    <div class="grid">
+        {% for item in site_items %}
+        <div class="card">
+            {% if item.image_url %}
+            <img class="card-image" src="{{ item.image_url }}" alt="{{ item.title }}">
+            {% endif %}
+            <h2>{{ item.title }}</h2>
+            <p>{{ item.description }}</p>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
 </section>
 {% endblock %}

@@ -4,7 +4,7 @@
 <section>
     <h1>Research</h1>
 
-    <h2>Research Experiences</h2>
+    <h2>Experiences</h2>
     <div class="grid">
         {% for item in research_experiences %}
         <div class="card">
@@ -23,6 +23,21 @@
         </div>
         {% endfor %}
     </div>
+
+    {% if site_items %}
+    <h2>More Experiences</h2>
+    <div class="grid">
+        {% for item in site_items %}
+        <div class="card">
+            {% if item.image_url %}
+            <img class="card-image" src="{{ item.image_url }}" alt="{{ item.title }}">
+            {% endif %}
+            <h3>{{ item.title }}</h3>
+            <p>{{ item.description }}</p>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
 
     <h2>Interests</h2>
     <div class="tags">

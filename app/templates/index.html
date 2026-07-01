@@ -9,4 +9,21 @@
     </p>
     <a class="button" href="/projects">View My Work</a>
 </section>
+
+{% if site_items %}
+<section>
+    <h2>Featured Updates</h2>
+    <div class="grid">
+        {% for item in site_items %}
+        <div class="card">
+            {% if item.image_url %}
+            <img class="card-image" src="{{ item.image_url }}" alt="{{ item.title }}">
+            {% endif %}
+            <h3>{{ item.title }}</h3>
+            <p>{{ item.description }}</p>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
 {% endblock %}

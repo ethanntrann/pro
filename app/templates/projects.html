@@ -13,5 +13,20 @@
         </div>
         {% endfor %}
     </div>
+
+    {% if site_items %}
+    <h2>More Projects</h2>
+    <div class="grid">
+        {% for item in site_items %}
+        <div class="card">
+            {% if item.image_url %}
+            <img class="card-image" src="{{ item.image_url }}" alt="{{ item.title }}">
+            {% endif %}
+            <h2>{{ item.title }}</h2>
+            <p>{{ item.description }}</p>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
 </section>
 {% endblock %}

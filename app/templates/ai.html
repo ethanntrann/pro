@@ -21,7 +21,7 @@ async function sendMessage() {
 
     if (message.trim() === "") return;
 
-    chatWindow.innerHTML += `<p><strong>You:</strong> ${message}</p>`;
+    addMessage("You", message);
     input.value = "";
 
     const response = await fetch("/chat", {
@@ -31,8 +31,19 @@ async function sendMessage() {
     });
 
     const data = await response.json();
-    chatWindow.innerHTML += `<p><strong>AI:</strong> ${data.reply}</p>`;
+    addMessage("AI", data.reply);
     chatWindow.scrollTop = chatWindow.scrollHeight;
+}
+
+function addMessage(sender, text) {
+    const chatWindow = document.getElementById("chat-window");
+    const message = document.createElement("p");
+    const label = document.createElement("strong");
+
+    label.textContent = `${sender}: `;
+    message.appendChild(label);
+    message.appendChild(document.createTextNode(text));
+    chatWindow.appendChild(message);
 }
 </script>
 {% endblock %}
