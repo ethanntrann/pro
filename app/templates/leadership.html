@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section>
+    <h1>Leadership</h1>
+
+    <div class="grid">
+        {% for item in leadership %}
+        <div class="card">
+            <h2>{{ item.title }}</h2>
+            <p>{{ item.description }}</p>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

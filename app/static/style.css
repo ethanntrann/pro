@@ -1,0 +1,166 @@
+body {
+    margin: 0;
+    background: #f8f5ef;
+    color: #1f1f1f;
+    font-family: 'Inter', sans-serif;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 55px;
+    background: #111111;
+    color: white;
+    flex-wrap: wrap;
+}
+
+nav h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 34px;
+    margin: 0;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    margin-left: 18px;
+    font-size: 15px;
+    font-weight: 500;
+}
+
+nav a:hover {
+    color: #d6b56d;
+}
+
+section {
+    max-width: 1050px;
+    margin: 60px auto;
+    padding: 25px;
+}
+
+.hero {
+    min-height: 430px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 66px;
+    margin-bottom: 15px;
+}
+
+h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 38px;
+    margin-top: 45px;
+}
+
+h3 {
+    font-size: 22px;
+}
+
+p {
+    font-size: 18px;
+    line-height: 1.7;
+}
+
+.button {
+    display: inline-block;
+    width: fit-content;
+    margin-top: 20px;
+    padding: 13px 24px;
+    background: #111111;
+    color: white;
+    text-decoration: none;
+    border-radius: 30px;
+}
+
+.button:hover {
+    background: #d6b56d;
+    color: black;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 25px;
+}
+
+.card {
+    background: white;
+    padding: 28px;
+    border-radius: 18px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+}
+
+.card span {
+    display: inline-block;
+    margin-top: 12px;
+    color: #8a6d2f;
+    font-weight: 600;
+}
+
+.tags span {
+    display: inline-block;
+    background: #111111;
+    color: white;
+    padding: 10px 16px;
+    border-radius: 20px;
+    margin: 8px;
+}
+
+.ai-box {
+    max-width: 620px;
+    background: white;
+    border-radius: 18px;
+    padding: 30px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+}
+
+.ai-box h1 {
+    font-size: 48px;
+}
+
+#chat-window {
+    height: 230px;
+    overflow-y: auto;
+    background: #f1eee8;
+    padding: 14px;
+    border-radius: 12px;
+    margin-bottom: 14px;
+}
+
+.chat-controls {
+    display: flex;
+    gap: 10px;
+}
+
+.chat-controls input {
+    flex: 1;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+}
+
+.chat-controls button {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 20px;
+    background: #111111;
+    color: white;
+    cursor: pointer;
+}
+
+.chat-controls button:hover {
+    background: #d6b56d;
+    color: black;
+}
+
+footer {
+    text-align: center;
+    padding: 30px;
+    color: #555;
+}
