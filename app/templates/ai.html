@@ -100,7 +100,7 @@ function formatAssistantText(text) {
 
 function loadChatHistory() {
     const chatWindow = document.getElementById("chat-window");
-    const saved = JSON.parse(localStorage.getItem(chatStorageKey) || "[]");
+    const saved = JSON.parse(sessionStorage.getItem(chatStorageKey) || "[]");
 
     chatWindow.innerHTML = "";
 
@@ -120,7 +120,7 @@ function saveChatHistory() {
         text: message.dataset.text
     })).filter((message) => message.sender && message.text);
 
-    localStorage.setItem(chatStorageKey, JSON.stringify(messages));
+    sessionStorage.setItem(chatStorageKey, JSON.stringify(messages));
 }
 </script>
 {% endblock %}

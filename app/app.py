@@ -91,10 +91,10 @@ leadership = [
 ]
 
 about_paragraphs = [
-    "My name is Ethan Tran. I am a senior at Diamond Bar High School, and I am passionate about medicine, cancer biology, research, computer science, and using technology to solve meaningful problems.",
-    "I have taken many courses to further these interests, including college-level biology and AP Chemistry, while also learning through hands-on experiences such as building computers and exploring how technology can support healthcare and problem solving.",
-    "Community service has also shaped who I am. With hundreds of hours dedicated to serving others, I have learned the importance of consistency, empathy, leadership, and using my time to make a positive impact.",
-    "In my free time, I also enjoy playing basketball."
+    "My name is Ethan Tran. I am a senior at Diamond Bar High School, and I am passionate about medicine, cancer biology, research, computer science, and using technology to solve meaningful problems. I am especially drawn to work that connects science with service because I want the things I learn to eventually help real people and families.",
+    "A lot of my interests come from being curious in both the classroom and hands-on settings. I have taken courses such as college-level biology, AP Chemistry, computer science, and engineering-related classes, while also learning through experiences like building computers and exploring how technology can support healthcare, communication, and problem solving.",
+    "Community service has also shaped who I am. With hundreds of hours dedicated to serving others, I have learned the importance of consistency, empathy, leadership, and showing up for people even in small ways. Whether I am volunteering in healthcare, helping organize student clubs, or mentoring younger students, I try to bring patience, responsibility, and genuine care into what I do.",
+    "Outside of academics and service, I enjoy playing basketball, spending time with my family, and trying new restaurants together. Those moments keep me grounded and remind me that growth is not only about achievements, but also about relationships, discipline, and enjoying the everyday parts of life."
 ]
 
 relevant_courses = [
@@ -142,7 +142,7 @@ Ethan is interested in medicine, cancer biology, stem cell biology,
 research, computer science, hackathons, volunteering, FBLA, leadership,
 and building technology that helps people. He has taken college-level
 biology and AP Chemistry, enjoys building computers, plays basketball,
-has hundreds of community service hours, and has leadership roles in
+spends time with family, enjoys trying new restaurants, has hundreds of community service hours, and has leadership roles in
 American Red Cross Club, FBLA, WeBall, APISU, and Key Club.
 He has earned awards in FBLA, HOSA, humanitarian and international law
 advocacy, and the President's Volunteer Service Award - Gold.

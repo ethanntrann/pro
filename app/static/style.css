@@ -437,23 +437,23 @@ p {
 }
 
 .role-red-cross {
-    background-image: linear-gradient(90deg, #ed1b2e, #8a111c);
+    background-image: linear-gradient(90deg, #ed1b2e, #b5121b);
 }
 
 .role-weball {
-    background-image: linear-gradient(90deg, #f97316, #2563eb);
+    background-image: linear-gradient(90deg, #f97316, #facc15, #ea580c);
 }
 
 .role-apisu {
-    background-image: linear-gradient(90deg, #0f766e, #d946ef);
+    background-image: linear-gradient(90deg, #dc2626, #f59e0b, #2563eb);
 }
 
 .role-key {
-    background-image: linear-gradient(90deg, #005baa, #f7c600);
+    background-image: linear-gradient(90deg, #003f87, #f7c600);
 }
 
 .role-fbla {
-    background-image: linear-gradient(90deg, #1d4ed8, #f59e0b);
+    background-image: linear-gradient(90deg, #003f87, #d71920);
 }
 
 .card-image {
