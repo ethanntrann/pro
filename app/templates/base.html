@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>Ethan Tran</title>
-    <link rel="stylesheet" href="/static/style.css?v=contact-github-typing">
+    <link rel="stylesheet" href="/static/style.css?v=admin-assistant-polish">
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -16,6 +16,9 @@
         <a href="/leadership">Leadership</a>
         <a href="/contact">Contact</a>
         <a href="/ai">Help</a>
+        {% if session.get("is_admin") %}
+        <a class="admin-nav-link" href="/admin/dashboard">Admin</a>
+        {% endif %}
         <button class="search-toggle" type="button" onclick="openSearch()" aria-label="Search website">Search</button>
     </div>
 </nav>

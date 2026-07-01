@@ -35,51 +35,13 @@
             <div class="visit-list">
                 {% for visit in analytics.recent_visits[:8] %}
                 <p>
-                    <strong>{{ visit.page }}</strong> at {{ visit.visited_at }}<br>
-                    <span>{{ visit.referrer }}</span><br>
-                    <span>{{ visit.ip_prefix }} / {{ visit.user_agent }}</span>
+                    <strong>{{ visit.device }}</strong><br>
+                    <span>{{ visit.visited_at }}</span>
                 </p>
                 {% else %}
                 <p>No visits yet.</p>
                 {% endfor %}
             </div>
-        </div>
-    </div>
-
-    <h2>Page Builder</h2>
-    <div class="builder-layout">
-        <form method="POST" enctype="multipart/form-data" class="admin-form">
-            <label for="section">Page</label>
-            <select id="section" name="section">
-                <option value="home" {% if selected_page == "home" %}selected{% endif %}>Home</option>
-                <option value="about" {% if selected_page == "about" %}selected{% endif %}>About Me</option>
-                <option value="experiences" {% if selected_page == "experiences" %}selected{% endif %}>Experiences</option>
-                <option value="projects" {% if selected_page == "projects" %}selected{% endif %}>Projects</option>
-                <option value="awards" {% if selected_page == "awards" %}selected{% endif %}>Awards</option>
-                <option value="leadership" {% if selected_page == "leadership" %}selected{% endif %}>Leadership</option>
-                <option value="contact" {% if selected_page == "contact" %}selected{% endif %}>Contact</option>
-                <option value="help" {% if selected_page == "help" %}selected{% endif %}>Help</option>
-            </select>
-
-            <label for="heading">Section Name</label>
-            <input id="heading" name="heading" placeholder="Example: Featured Work, Volunteering, Gallery">
-
-            <label for="title">Title</label>
-            <input id="title" name="title" placeholder="Short title for this block" required>
-
-            <label for="description">Information</label>
-            <textarea id="description" name="description" rows="7" placeholder="Add the text you want visitors to see." required></textarea>
-
-            <label for="media">Media</label>
-            <input id="media" name="media" type="file" accept="image/png,image/jpeg,image/gif,image/webp,application/pdf">
-
-            <button type="submit">Add to Website</button>
-        </form>
-
-        <div class="builder-preview">
-            <h3>Simple Workflow</h3>
-            <p>Pick a page, name the section, add a title and description, then upload a picture if you want one.</p>
-            <p>Each added block appears on the public page and can be removed from the list below.</p>
         </div>
     </div>
 

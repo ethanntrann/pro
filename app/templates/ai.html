@@ -2,10 +2,23 @@
 
 {% block content %}
 <section class="ai-box">
-    <h1>Ethan's Assistant</h1>
+    <div class="assistant-header">
+        <div>
+            <span class="assistant-kicker">Personal guide</span>
+            <h1>Ethan's Assistant</h1>
+            <p>Ask about Ethan's research, service, awards, leadership, projects, or interests.</p>
+        </div>
+        <div class="assistant-orb" aria-hidden="true">ET</div>
+    </div>
+
+    <div class="assistant-prompts" aria-label="Suggested questions">
+        <button type="button" onclick="quickAsk('What healthcare experiences has Ethan had?')">Healthcare</button>
+        <button type="button" onclick="quickAsk('Tell me about Ethan leadership roles.')">Leadership</button>
+        <button type="button" onclick="quickAsk('What awards has Ethan earned?')">Awards</button>
+    </div>
 
     <div id="chat-window">
-        <p><strong>Assistant:</strong> Hello! Ask me any question about Ethan's research, projects, leadership, or interests!</p>
+        <p class="chat-message assistant-message"><strong>Assistant:</strong> Hello! Ask me any question about Ethan's research, projects, leadership, or interests!</p>
     </div>
 
     <div class="chat-controls">
@@ -74,11 +87,18 @@ function handleChatKey(event) {
     if (event.key === "Enter") sendMessage();
 }
 
+function quickAsk(question) {
+    const input = document.getElementById("user-input");
+    input.value = question;
+    sendMessage();
+}
+
 function addMessage(sender, text, persist = true) {
     const chatWindow = document.getElementById("chat-window");
     const message = document.createElement("p");
     const label = document.createElement("strong");
 
+    message.className = `chat-message ${sender === "Assistant" ? "assistant-message" : "user-message"}`;
     message.dataset.sender = sender;
     message.dataset.text = text;
     label.textContent = `${sender}: `;
@@ -101,7 +121,7 @@ function showTypingIndicator() {
     const label = document.createElement("strong");
     const dots = document.createElement("span");
 
-    message.className = "typing-indicator";
+    message.className = "chat-message assistant-message typing-indicator";
     label.textContent = "Assistant: ";
     dots.setAttribute("aria-label", "Assistant is typing");
     dots.innerHTML = '<span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span>';

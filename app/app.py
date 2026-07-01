@@ -225,18 +225,38 @@ def visitor_ip_prefix():
         return ip_address.split(":")[0] + ":*"
     return ip_address
 
+def device_label(user_agent):
+    agent = (user_agent or "").lower()
+    if "iphone" in agent:
+        return "iPhone"
+    if "ipad" in agent:
+        return "iPad"
+    if "android" in agent and "mobile" in agent:
+        return "Android phone"
+    if "android" in agent:
+        return "Android tablet"
+    if "windows" in agent:
+        return "Windows computer"
+    if "macintosh" in agent or "mac os" in agent:
+        return "Mac computer"
+    if "linux" in agent:
+        return "Linux computer"
+    return "Unknown device"
+
 def track_visit(page):
     if request.path.startswith("/static") or request.path.startswith("/admin") or request.path == "/chat":
         return
 
     data = load_data()
+    user_agent = request.headers.get("User-Agent", "Unknown")
     data["visits"].insert(0, {
         "id": uuid4().hex,
         "page": page,
         "path": request.path,
         "visited_at": datetime.now().strftime("%Y-%m-%d %I:%M %p"),
         "referrer": request.referrer or "Direct",
-        "user_agent": request.headers.get("User-Agent", "Unknown"),
+        "user_agent": user_agent,
+        "device": device_label(user_agent),
         "ip_prefix": visitor_ip_prefix()
     })
     data["visits"] = data["visits"][:500]
@@ -244,7 +264,13 @@ def track_visit(page):
 
 def analytics_summary(visits):
     page_counts = {}
-    recent_visits = visits[:50]
+    recent_visits = [
+        {
+            "device": visit.get("device") or device_label(visit.get("user_agent", "")),
+            "visited_at": visit.get("visited_at", "Unknown time")
+        }
+        for visit in visits[:50]
+    ]
 
     for visit in visits:
         page_counts[visit["page"]] = page_counts.get(visit["page"], 0) + 1
@@ -376,30 +402,15 @@ def admin_login():
 
     return render_template("admin_login.html", error=error)
 
-@app.route("/admin/dashboard", methods=["GET", "POST"])
+@app.route("/admin/dashboard")
 @admin_required
 def admin_dashboard():
     data = load_data()
-    selected_page = request.args.get("page", "home")
-
-    if request.method == "POST":
-        title = request.form.get("title", "").strip()
-        description = request.form.get("description", "").strip()
-        section = request.form.get("section", selected_page)
-        heading = request.form.get("heading", "").strip()
-        media = request.files.get("media") or request.files.get("image")
-        image_url, file_url, file_name = save_uploaded_media(media)
-
-        if title and description:
-            data["site_items"].insert(0, build_site_item(title, description, section, heading, image_url, file_url, file_name))
-            save_data(data)
-            return redirect(url_for("admin_dashboard", page=section))
 
     return render_template(
         "admin_dashboard.html",
         questions=data["assistant_questions"],
         site_items=data["site_items"],
-        selected_page=selected_page,
         analytics=analytics_summary(data["visits"])
     )
 
