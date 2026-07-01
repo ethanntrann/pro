@@ -7,7 +7,19 @@
     <div class="grid">
         {% for item in leadership %}
         <div class="card">
-            <h2 class="role-title {% if 'Red Cross' in item.title %}role-red-cross{% elif 'WeBall' in item.title %}role-weball{% elif 'APISU' in item.title %}role-apisu{% elif 'Key Club' in item.title %}role-key{% elif 'FBLA' in item.title %}role-fbla{% endif %}">{{ item.title }}</h2>
+            {% if 'American Red Cross Club' in item.title %}
+            <h2>President of <span class="role-title role-red-cross">American Red Cross Club</span></h2>
+            {% elif 'WeBall' in item.title %}
+            <h2>President of <span class="role-title role-weball">WeBall</span></h2>
+            {% elif 'APISU' in item.title %}
+            <h2>President of <span class="role-title role-apisu">Asian Pacific Islander Student Union (APISU)</span></h2>
+            {% elif 'Key Club' in item.title %}
+            <h2>Vice President of <span class="role-title role-key">Key Club</span></h2>
+            {% elif 'FBLA' in item.title %}
+            <h2>Competitive Events Officer for <span class="role-title role-fbla">FBLA</span></h2>
+            {% else %}
+            <h2>{{ item.title }}</h2>
+            {% endif %}
             <p>{{ item.description }}</p>
         </div>
         {% endfor %}

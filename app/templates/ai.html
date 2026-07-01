@@ -9,7 +9,7 @@
     </div>
 
     <div class="chat-controls">
-        <input id="user-input" placeholder="Ask something about Ethan...">
+        <input id="user-input" placeholder="Ask something about Ethan..." onkeydown="handleChatKey(event)">
         <button onclick="sendMessage()">Send</button>
     </div>
 </section>
@@ -60,6 +60,10 @@ async function sendMessage() {
     addMessage("Assistant", data.reply);
     saveChatHistory();
     chatWindow.scrollTop = chatWindow.scrollHeight;
+}
+
+function handleChatKey(event) {
+    if (event.key === "Enter") sendMessage();
 }
 
 function addMessage(sender, text, persist = true) {

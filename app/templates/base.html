@@ -14,10 +14,9 @@
         <a href="/research">Research</a>
         <a href="/awards">Awards</a>
         <a href="/leadership">Leadership</a>
-        <a href="/resume" target="_blank">Resume</a>
         <a href="/contact">Contact</a>
         <a href="/ai">Help</a>
-        <button class="search-toggle" type="button" onclick="openSearch()" aria-label="Search website">⌕</button>
+        <button class="search-toggle" type="button" onclick="openSearch()" aria-label="Search website">Search</button>
     </div>
 </nav>
 
@@ -25,7 +24,7 @@
     <div class="search-panel">
         <button class="search-close" type="button" onclick="closeSearch()" aria-label="Close search">×</button>
         <h2>Search</h2>
-        <input id="site-search-input" type="search" placeholder="Search Ethan's website..." oninput="runSiteSearch()">
+        <input id="site-search-input" type="search" placeholder="Search Ethan's website..." oninput="runSiteSearch()" onkeydown="handleSearchKey(event)">
         <div id="site-search-results" class="search-results"></div>
     </div>
 </div>
@@ -116,8 +115,10 @@ const searchIndex = [
 
 function openSearch() {
     document.getElementById("search-overlay").hidden = false;
-    document.getElementById("site-search-input").focus();
-    runSiteSearch();
+    const input = document.getElementById("site-search-input");
+    input.value = "";
+    document.getElementById("site-search-results").innerHTML = "";
+    input.focus();
 }
 
 function closeSearch() {
@@ -125,16 +126,51 @@ function closeSearch() {
 }
 
 function runSiteSearch() {
-    const query = document.getElementById("site-search-input").value.toLowerCase().trim();
+    const query = document.getElementById("site-search-input").value.trim();
+    const normalizedQuery = query.toLowerCase();
     const results = document.getElementById("site-search-results");
-    const matches = searchIndex.filter((item) => !query || `${item.title} ${item.text}`.toLowerCase().includes(query));
+
+    if (!normalizedQuery) {
+        results.innerHTML = "";
+        return;
+    }
+
+    const matches = searchIndex.filter((item) => `${item.title} ${item.text}`.toLowerCase().includes(normalizedQuery));
 
     results.innerHTML = matches.map((item) => `
         <a class="search-result" href="${item.url}">
-            <strong>${item.title}</strong>
-            <span>${item.text}</span>
+            <strong>${highlightMatch(item.title, query)}</strong>
+            <span>${highlightMatch(item.text, query)}</span>
         </a>
-    `).join("");
+    `).join("") || `<p class="search-empty">No matching pages found.</p>`;
+}
+
+function handleSearchKey(event) {
+    if (event.key !== "Enter") return;
+
+    const query = document.getElementById("site-search-input").value.toLowerCase().trim();
+    if (!query) return;
+
+    const match = searchIndex.find((item) => `${item.title} ${item.text}`.toLowerCase().includes(query));
+    if (match) window.location.href = match.url;
+}
+
+function highlightMatch(text, query) {
+    const escapedText = escapeHtml(text);
+    const escapedQuery = escapeHtml(query);
+    if (!escapedQuery) return escapedText;
+
+    const pattern = new RegExp(`(${escapedQuery.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")})`, "ig");
+    return escapedText.replace(pattern, "<mark>$1</mark>");
+}
+
+function escapeHtml(text) {
+    return text
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
 }
 
 document.addEventListener("keydown", (event) => {
