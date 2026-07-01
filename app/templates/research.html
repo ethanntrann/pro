@@ -45,5 +45,12 @@
         <span>{{ interest }}</span>
         {% endfor %}
     </div>
+
+    <h2>Relevant Courses</h2>
+    <div class="tags">
+        {% for course in relevant_courses %}
+        <span>{{ course }}</span>
+        {% endfor %}
+    </div>
 </section>
 {% endblock %}

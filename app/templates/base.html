@@ -18,16 +18,24 @@
         <a href="/leadership">Leadership</a>
         <a href="/resume" target="_blank">Resume</a>
         <a href="/contact">Contact</a>
-        <a href="/ai">AI Assistant</a>
+        <a href="/ai">Help</a>
     </div>
 </nav>
 
 {% block content %}{% endblock %}
 
+{% if session.get("is_admin") and current_page %}
+<div class="admin-page-tools">
+    <a href="/admin/dashboard?page={{ current_page }}">Edit This Page</a>
+</div>
+{% endif %}
+
 <div class="quick-contact" aria-label="Quick contact links">
     <a href="mailto:ethanlytran@gmail.com">ethanlytran@gmail.com</a>
     <span>or</span>
-    <a href="sms:6262423764">Text 626-242-3764</a>
+    <a href="tel:6262423764">626-242-3764</a>
+    <span>or</span>
+    <a href="sms:6262423764">Message</a>
 </div>
 
 <footer>

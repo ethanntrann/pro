@@ -2,10 +2,10 @@
 
 {% block content %}
 <section class="ai-box">
-    <h1>AI Assistant</h1>
+    <h1>Ethan's Assistant</h1>
 
     <div id="chat-window">
-        <p><strong>AI:</strong> Hello! Ask me any question about Ethan's research, projects, leadership, or interests!</p>
+        <p><strong>Assistant:</strong> Hello! Ask me any question about Ethan's research, projects, leadership, or interests!</p>
     </div>
 
     <div class="chat-controls">
@@ -13,6 +13,23 @@
         <button onclick="sendMessage()">Send</button>
     </div>
 </section>
+
+{% for heading, items in site_sections.items() %}
+<section>
+    <h2>{{ heading }}</h2>
+    <div class="grid">
+        {% for item in items %}
+        <div class="card">
+            {% if item.image_url %}
+            <img class="card-image" src="{{ item.image_url }}" alt="{{ item.title }}">
+            {% endif %}
+            <h2>{{ item.title }}</h2>
+            <p>{{ item.description }}</p>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endfor %}
 
 <script>
 async function sendMessage() {
@@ -32,7 +49,7 @@ async function sendMessage() {
     });
 
     const data = await response.json();
-    addMessage("AI", data.reply);
+    addMessage("Assistant", data.reply);
     chatWindow.scrollTop = chatWindow.scrollHeight;
 }
 
@@ -43,7 +60,7 @@ function addMessage(sender, text) {
 
     label.textContent = `${sender}: `;
     message.appendChild(label);
-    if (sender === "AI") {
+    if (sender === "Assistant") {
         const response = document.createElement("span");
         response.innerHTML = formatAssistantText(text);
         message.appendChild(response);

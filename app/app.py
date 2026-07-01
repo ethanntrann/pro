@@ -87,6 +87,18 @@ leadership = [
     }
 ]
 
+relevant_courses = [
+    "AP Calculus AB & BC",
+    "AP Chemistry",
+    "AP Computer Science A",
+    "Biology",
+    "Computer Systems",
+    "Industrial Engineering",
+    "BIOL 4 (Biology for Majors)",
+    "AHIS 6 (History of Modern Art)",
+    "BUSC 1A (Principles of Macroeconomics)"
+]
+
 awards = [
     {
         "section": "Service and Advocacy",
@@ -132,13 +144,14 @@ short, polished, and helpful.
 
 def load_data():
     if not os.path.exists(DATA_FILE):
-        return {"assistant_questions": [], "site_items": []}
+        return {"assistant_questions": [], "site_items": [], "visits": []}
 
     with open(DATA_FILE, "r", encoding="utf-8") as file:
         data = json.load(file)
 
     data.setdefault("assistant_questions", [])
     data.setdefault("site_items", [])
+    data.setdefault("visits", [])
     changed = False
 
     for item in data["site_items"]:
@@ -170,6 +183,53 @@ def page_sections(section):
         sections.setdefault(heading, []).append(item)
     return sections
 
+def page_name_from_path(path):
+    if path == "/":
+        return "home"
+    return path.strip("/") or "home"
+
+def visitor_ip_prefix():
+    forwarded = request.headers.get("X-Forwarded-For", "")
+    ip_address = forwarded.split(",")[0].strip() or request.remote_addr or "unknown"
+    if "." in ip_address:
+        parts = ip_address.split(".")
+        return ".".join(parts[:2]) + ".*.*"
+    if ":" in ip_address:
+        return ip_address.split(":")[0] + ":*"
+    return ip_address
+
+def track_visit(page):
+    if request.path.startswith("/static") or request.path.startswith("/admin") or request.path == "/chat":
+        return
+
+    data = load_data()
+    data["visits"].insert(0, {
+        "id": uuid4().hex,
+        "page": page,
+        "path": request.path,
+        "visited_at": datetime.now().strftime("%Y-%m-%d %I:%M %p"),
+        "referrer": request.referrer or "Direct",
+        "user_agent": request.headers.get("User-Agent", "Unknown"),
+        "ip_prefix": visitor_ip_prefix()
+    })
+    data["visits"] = data["visits"][:500]
+    save_data(data)
+
+def analytics_summary(visits):
+    page_counts = {}
+    recent_visits = visits[:50]
+
+    for visit in visits:
+        page_counts[visit["page"]] = page_counts.get(visit["page"], 0) + 1
+
+    top_pages = sorted(page_counts.items(), key=lambda item: item[1], reverse=True)
+
+    return {
+        "total_visits": len(visits),
+        "top_pages": top_pages,
+        "recent_visits": recent_visits
+    }
+
 def admin_required(view):
     @wraps(view)
     def wrapped_view(*args, **kwargs):
@@ -180,33 +240,41 @@ def admin_required(view):
 
 @app.route("/")
 def home():
-    return render_template("index.html", site_sections=page_sections("home"))
+    track_visit("home")
+    return render_template("index.html", site_sections=page_sections("home"), current_page="home")
 
 @app.route("/about")
 def about():
-    return render_template("about.html", site_sections=page_sections("about"))
+    track_visit("about")
+    return render_template("about.html", site_sections=page_sections("about"), current_page="about")
 
 @app.route("/research")
 def research():
+    track_visit("experiences")
     return render_template(
         "research.html",
         research_experiences=research_experiences,
         publications=publications,
         research_interests=research_interests,
-        site_sections=page_sections("experiences")
+        relevant_courses=relevant_courses,
+        site_sections=page_sections("experiences"),
+        current_page="experiences"
     )
 
 @app.route("/projects")
 def projects_page():
-    return render_template("projects.html", projects=projects, site_sections=page_sections("projects"))
+    track_visit("projects")
+    return render_template("projects.html", projects=projects, site_sections=page_sections("projects"), current_page="projects")
 
 @app.route("/leadership")
 def leadership_page():
-    return render_template("leadership.html", leadership=leadership, site_sections=page_sections("leadership"))
+    track_visit("leadership")
+    return render_template("leadership.html", leadership=leadership, site_sections=page_sections("leadership"), current_page="leadership")
 
 @app.route("/awards")
 def awards_page():
-    return render_template("awards.html", awards=awards, site_sections=page_sections("awards"))
+    track_visit("awards")
+    return render_template("awards.html", awards=awards, site_sections=page_sections("awards"), current_page="awards")
 
 @app.route("/resume")
 def resume():
@@ -214,11 +282,13 @@ def resume():
 
 @app.route("/contact")
 def contact():
-    return render_template("contact.html")
+    track_visit("contact")
+    return render_template("contact.html", site_sections=page_sections("contact"), current_page="contact")
 
 @app.route("/ai")
 def ai():
-    return render_template("ai.html")
+    track_visit("help")
+    return render_template("ai.html", site_sections=page_sections("help"), current_page="help")
 
 @app.route("/chat", methods=["POST"])
 def chat():
@@ -271,11 +341,12 @@ def admin_login():
 @admin_required
 def admin_dashboard():
     data = load_data()
+    selected_page = request.args.get("page", "home")
 
     if request.method == "POST":
         title = request.form.get("title", "").strip()
         description = request.form.get("description", "").strip()
-        section = request.form.get("section", "home")
+        section = request.form.get("section", selected_page)
         heading = request.form.get("heading", "").strip()
         image = request.files.get("image")
         image_url = ""
@@ -297,13 +368,38 @@ def admin_dashboard():
                 "created_at": datetime.now().strftime("%Y-%m-%d %I:%M %p")
             })
             save_data(data)
-            return redirect(url_for("admin_dashboard"))
+            return redirect(url_for("admin_dashboard", page=section))
 
     return render_template(
         "admin_dashboard.html",
         questions=data["assistant_questions"],
-        site_items=data["site_items"]
+        site_items=data["site_items"],
+        selected_page=selected_page,
+        analytics=analytics_summary(data["visits"])
     )
+
+@app.route("/admin/content/<item_id>/update", methods=["POST"])
+@admin_required
+def update_site_item(item_id):
+    data = load_data()
+
+    for item in data["site_items"]:
+        if item.get("id") == item_id:
+            item["section"] = request.form.get("section", item["section"])
+            item["heading"] = request.form.get("heading", "").strip()
+            item["title"] = request.form.get("title", "").strip()
+            item["description"] = request.form.get("description", "").strip()
+            image = request.files.get("image")
+
+            if image and image.filename and allowed_file(image.filename):
+                filename = secure_filename(image.filename)
+                timestamped_filename = f"{datetime.now().strftime('%Y%m%d%H%M%S')}_{filename}"
+                image.save(os.path.join(UPLOAD_FOLDER, timestamped_filename))
+                item["image_url"] = f"/static/uploads/{timestamped_filename}"
+            break
+
+    save_data(data)
+    return redirect(url_for("admin_dashboard", page=request.form.get("section", "home")))
 
 @app.route("/admin/content/<item_id>/delete", methods=["POST"])
 @admin_required

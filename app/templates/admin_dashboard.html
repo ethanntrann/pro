@@ -7,17 +7,58 @@
         <a class="button" href="/admin/logout">Log Out</a>
     </div>
 
+    <h2>Website Analytics</h2>
+    <div class="analytics-grid">
+        <div class="analytics-card">
+            <span>Total Visits</span>
+            <strong>{{ analytics.total_visits }}</strong>
+        </div>
+        <div class="analytics-card">
+            <span>Most Viewed Page</span>
+            <strong>{% if analytics.top_pages %}{{ analytics.top_pages[0][0] }}{% else %}None yet{% endif %}</strong>
+        </div>
+    </div>
+
+    <div class="grid">
+        <div class="card">
+            <h3>Top Pages</h3>
+            <ul class="admin-plain-list">
+                {% for page, count in analytics.top_pages %}
+                <li>{{ page }}: {{ count }} visits</li>
+                {% else %}
+                <li>No visits yet.</li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="card">
+            <h3>Recent Visits</h3>
+            <div class="visit-list">
+                {% for visit in analytics.recent_visits[:8] %}
+                <p>
+                    <strong>{{ visit.page }}</strong> at {{ visit.visited_at }}<br>
+                    <span>{{ visit.referrer }}</span><br>
+                    <span>{{ visit.ip_prefix }} / {{ visit.user_agent }}</span>
+                </p>
+                {% else %}
+                <p>No visits yet.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
     <h2>Page Builder</h2>
     <div class="builder-layout">
         <form method="POST" enctype="multipart/form-data" class="admin-form">
             <label for="section">Page</label>
             <select id="section" name="section">
-                <option value="home">Home</option>
-                <option value="about">About Me</option>
-                <option value="experiences">Experiences</option>
-                <option value="projects">Projects</option>
-                <option value="leadership">Leadership</option>
-                <option value="awards">Awards</option>
+                <option value="home" {% if selected_page == "home" %}selected{% endif %}>Home</option>
+                <option value="about" {% if selected_page == "about" %}selected{% endif %}>About Me</option>
+                <option value="experiences" {% if selected_page == "experiences" %}selected{% endif %}>Experiences</option>
+                <option value="projects" {% if selected_page == "projects" %}selected{% endif %}>Projects</option>
+                <option value="awards" {% if selected_page == "awards" %}selected{% endif %}>Awards</option>
+                <option value="leadership" {% if selected_page == "leadership" %}selected{% endif %}>Leadership</option>
+                <option value="contact" {% if selected_page == "contact" %}selected{% endif %}>Contact</option>
+                <option value="help" {% if selected_page == "help" %}selected{% endif %}>Help</option>
             </select>
 
             <label for="heading">Section Name</label>
@@ -42,7 +83,7 @@
         </div>
     </div>
 
-    <h2>AI Assistant Questions</h2>
+    <h2>Assistant Questions</h2>
     <div class="admin-list">
         {% for item in questions %}
         <div class="admin-entry">
@@ -63,9 +104,29 @@
             <img class="card-image" src="{{ item.image_url }}" alt="{{ item.title }}">
             {% endif %}
             <span>{{ item.section }}{% if item.heading %} / {{ item.heading }}{% endif %}</span>
-            <h3>{{ item.title }}</h3>
-            <p>{{ item.description }}</p>
-            <form method="POST" action="/admin/content/{{ item.id }}/delete">
+            <form method="POST" action="/admin/content/{{ item.id }}/update" enctype="multipart/form-data" class="inline-edit-form">
+                <label>Page</label>
+                <select name="section">
+                    <option value="home" {% if item.section == "home" %}selected{% endif %}>Home</option>
+                    <option value="about" {% if item.section == "about" %}selected{% endif %}>About Me</option>
+                    <option value="experiences" {% if item.section == "experiences" %}selected{% endif %}>Experiences</option>
+                    <option value="projects" {% if item.section == "projects" %}selected{% endif %}>Projects</option>
+                    <option value="awards" {% if item.section == "awards" %}selected{% endif %}>Awards</option>
+                    <option value="leadership" {% if item.section == "leadership" %}selected{% endif %}>Leadership</option>
+                    <option value="contact" {% if item.section == "contact" %}selected{% endif %}>Contact</option>
+                    <option value="help" {% if item.section == "help" %}selected{% endif %}>Help</option>
+                </select>
+                <label>Section Name</label>
+                <input name="heading" value="{{ item.heading }}">
+                <label>Title</label>
+                <input name="title" value="{{ item.title }}" required>
+                <label>Information</label>
+                <textarea name="description" rows="4" required>{{ item.description }}</textarea>
+                <label>Replace Picture</label>
+                <input name="image" type="file" accept="image/png,image/jpeg,image/gif,image/webp">
+                <button type="submit">Save Changes</button>
+            </form>
+            <form method="POST" action="/admin/content/{{ item.id }}/delete" class="delete-form">
                 <button class="danger-button" type="submit">Delete</button>
             </form>
         </div>
