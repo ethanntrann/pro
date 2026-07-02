@@ -1,17 +1,42 @@
 {% extends "base.html" %}
 
 {% block content %}
-<section>
-    <h1>Contact</h1>
-    <p>Email: ethanlytran@gmail.com</p>
-    <p>Phone: 626-242-3764</p>
-    <p>Website: ethanlytran.com</p>
-    <p class="contact-socials">
+<section class="contact-page">
+    <div class="contact-hero">
+        <span class="contact-kicker">Get in touch</span>
+        <h1>Contact</h1>
+        <p>I am always open to conversations about research, service, leadership, healthcare, computer science, and meaningful opportunities.</p>
+    </div>
+
+    <div class="contact-card">
+        <a class="contact-detail" href="mailto:ethanlytran@gmail.com">
+            <span>Email</span>
+            <strong>ethanlytran@gmail.com</strong>
+        </a>
+
+        <details class="contact-detail contact-phone-action">
+            <summary>
+                <span>Phone</span>
+                <strong>626-242-3764</strong>
+            </summary>
+            <div>
+                <a href="tel:6262423764">Call</a>
+                <a href="sms:6262423764">Text</a>
+            </div>
+        </details>
+
+        <a class="contact-detail" href="https://ethanlytran.com">
+            <span>Website</span>
+            <strong>ethanlytran.com</strong>
+        </a>
+    </div>
+
+    <div class="contact-socials">
         <a class="linkedin-logo linkedin-logo-small" href="{{ linkedin_url }}" target="_blank" rel="noopener" aria-label="LinkedIn profile">in</a>
         <a class="github-logo github-logo-small" href="{{ github_url }}" target="_blank" rel="noopener" aria-label="GitHub profile">
             <img src="/static/github-logo.png" alt="">
         </a>
-    </p>
+    </div>
 
     {% for heading, items in site_sections.items() %}
     <h2>{{ heading }}</h2>
