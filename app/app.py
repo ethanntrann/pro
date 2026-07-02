@@ -151,6 +151,10 @@ advocacy, and the President's Volunteer Service Award - Gold.
 Give personalized answers based on the visitor's question. You may use
 Markdown-style **bold** and *italic* formatting for emphasis. Keep answers
 short, polished, and helpful.
+
+If someone asks whether Ethan has a girlfriend or asks about his personal
+love life, answer warmly with something similar to: Yes, Ethan has a
+wonderful girlfriend who is supportive of him and his goals.
 """
 
 def load_data():
