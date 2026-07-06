@@ -3,8 +3,9 @@ import os
 from datetime import datetime
 from functools import wraps
 from uuid import uuid4
+from zoneinfo import ZoneInfo
 
-from flask import Flask, render_template, request, jsonify, redirect, session, url_for
+from flask import Flask, render_template, request, jsonify, redirect, session, url_for, g
 from openrouter import OpenRouter
 from werkzeug.utils import secure_filename
 
@@ -21,6 +22,8 @@ ALLOWED_MEDIA_EXTENSIONS = {"png", "jpg", "jpeg", "gif", "webp", "pdf"}
 IMAGE_EXTENSIONS = {"png", "jpg", "jpeg", "gif", "webp"}
 LINKEDIN_URL = "https://www.linkedin.com/in/ethanlytran"
 GITHUB_URL = "https://github.com/ethanntrann"
+PACIFIC_TIME = ZoneInfo("America/Los_Angeles")
+VISITOR_COOKIE = "ethan_visitor_id"
 
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
@@ -180,6 +183,11 @@ def load_data():
         item.setdefault("file_url", "")
         item.setdefault("file_name", "")
 
+    normalized_visits = normalize_visitors(data["visits"])
+    if normalized_visits != data["visits"]:
+        data["visits"] = normalized_visits
+        changed = True
+
     if changed:
         save_data(data)
 
@@ -222,6 +230,43 @@ def page_name_from_path(path):
         return "home"
     return path.strip("/") or "home"
 
+def pacific_timestamp():
+    return datetime.now(PACIFIC_TIME).strftime("%Y-%m-%d %I:%M %p PST")
+
+def next_visitor_name(visits):
+    numbers = []
+    for visit in visits:
+        name = visit.get("visitor_name", "")
+        if name.startswith("Visitor "):
+            try:
+                numbers.append(int(name.split("Visitor ", 1)[1]))
+            except ValueError:
+                pass
+    return f"Visitor {max(numbers, default=0) + 1:03d}"
+
+def visitor_fingerprint(visit):
+    return f"{visit.get('ip_prefix', 'unknown')}|{visit.get('user_agent', 'unknown')}"
+
+def normalize_visitors(visits):
+    normalized = []
+    seen = set()
+
+    for visit in reversed(visits):
+        visitor_id = visit.get("visitor_id") or visitor_fingerprint(visit)
+        if visitor_id in seen:
+            continue
+        seen.add(visitor_id)
+        normalized.append({
+            "visitor_id": visitor_id,
+            "visitor_name": visit.get("visitor_name") or f"Visitor {len(normalized) + 1:03d}",
+            "device": visit.get("device") or device_label(visit.get("user_agent", "")),
+            "visited_at": visit.get("visited_at", "Unknown time"),
+            "user_agent": visit.get("user_agent", "Unknown"),
+            "ip_prefix": visit.get("ip_prefix", "unknown")
+        })
+
+    return list(reversed(normalized))[:500]
+
 def visitor_ip_prefix():
     forwarded = request.headers.get("X-Forwarded-For", "")
     ip_address = forwarded.split(",")[0].strip() or request.remote_addr or "unknown"
@@ -255,39 +300,30 @@ def track_visit(page):
         return
 
     data = load_data()
+    visitor_id = request.cookies.get(VISITOR_COOKIE) or uuid4().hex
+    if any(visit.get("visitor_id") == visitor_id for visit in data["visits"]):
+        return
+
     user_agent = request.headers.get("User-Agent", "Unknown")
     data["visits"].insert(0, {
-        "id": uuid4().hex,
-        "page": page,
-        "path": request.path,
-        "visited_at": datetime.now().strftime("%Y-%m-%d %I:%M %p"),
-        "referrer": request.referrer or "Direct",
+        "visitor_id": visitor_id,
+        "visitor_name": next_visitor_name(data["visits"]),
+        "visited_at": pacific_timestamp(),
         "user_agent": user_agent,
         "device": device_label(user_agent),
         "ip_prefix": visitor_ip_prefix()
     })
+    if not request.cookies.get(VISITOR_COOKIE):
+        g.new_visitor_id = visitor_id
     data["visits"] = data["visits"][:500]
     save_data(data)
 
 def analytics_summary(visits):
-    page_counts = {}
-    recent_visits = [
-        {
-            "device": visit.get("device") or device_label(visit.get("user_agent", "")),
-            "visited_at": visit.get("visited_at", "Unknown time")
-        }
-        for visit in visits[:50]
-    ]
-
-    for visit in visits:
-        page_counts[visit["page"]] = page_counts.get(visit["page"], 0) + 1
-
-    top_pages = sorted(page_counts.items(), key=lambda item: item[1], reverse=True)
+    visitors = normalize_visitors(visits)
 
     return {
-        "total_visits": len(visits),
-        "top_pages": top_pages,
-        "recent_visits": recent_visits
+        "total_visitors": len(visitors),
+        "recent_visits": visitors[:50]
     }
 
 def editor_items(section):
@@ -300,6 +336,13 @@ def admin_required(view):
             return redirect(url_for("admin_login"))
         return view(*args, **kwargs)
     return wrapped_view
+
+@app.after_request
+def remember_visitor(response):
+    visitor_id = getattr(g, "new_visitor_id", None)
+    if visitor_id:
+        response.set_cookie(VISITOR_COOKIE, visitor_id, max_age=60 * 60 * 24 * 365, samesite="Lax")
+    return response
 
 @app.route("/")
 def home():

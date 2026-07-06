@@ -1014,9 +1014,31 @@ p {
     line-height: 1.5;
 }
 
+.visit-list {
+    display: grid;
+    gap: 10px;
+}
+
+.visit-list p {
+    display: grid;
+    grid-template-columns: minmax(110px, 0.8fr) minmax(130px, 1fr) minmax(170px, 1fr);
+    gap: 12px;
+    align-items: center;
+    margin: 0;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(17,17,17,0.08);
+}
+
 .visit-list span {
     color: #666;
     font-size: 14px;
+}
+
+.visit-list em {
+    color: #8a6d2f;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 700;
 }
 
 .admin-content-list {
@@ -1141,6 +1163,11 @@ p {
     .contact-detail strong {
         font-size: 24px;
         overflow-wrap: anywhere;
+    }
+
+    .visit-list p {
+        grid-template-columns: 1fr;
+        gap: 4px;
     }
 }
 

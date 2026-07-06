@@ -10,38 +10,23 @@
     <h2>Website Analytics</h2>
     <div class="analytics-grid">
         <div class="analytics-card">
-            <span>Total Visits</span>
-            <strong>{{ analytics.total_visits }}</strong>
-        </div>
-        <div class="analytics-card">
-            <span>Most Viewed Page</span>
-            <strong>{% if analytics.top_pages %}{{ analytics.top_pages[0][0] }}{% else %}None yet{% endif %}</strong>
+            <span>Total Unique Visitors</span>
+            <strong>{{ analytics.total_visitors }}</strong>
         </div>
     </div>
 
-    <div class="grid">
-        <div class="card">
-            <h3>Top Pages</h3>
-            <ul class="admin-plain-list">
-                {% for page, count in analytics.top_pages %}
-                <li>{{ page }}: {{ count }} visits</li>
-                {% else %}
-                <li>No visits yet.</li>
-                {% endfor %}
-            </ul>
-        </div>
-        <div class="card">
-            <h3>Recent Visits</h3>
-            <div class="visit-list">
-                {% for visit in analytics.recent_visits[:8] %}
-                <p>
-                    <strong>{{ visit.device }}</strong><br>
-                    <span>{{ visit.visited_at }}</span>
-                </p>
-                {% else %}
-                <p>No visits yet.</p>
-                {% endfor %}
-            </div>
+    <div class="card">
+        <h3>Visitor List</h3>
+        <div class="visit-list">
+            {% for visit in analytics.recent_visits %}
+            <p>
+                <strong>{{ visit.visitor_name }}</strong>
+                <span>{{ visit.device }}</span>
+                <em>{{ visit.visited_at }}</em>
+            </p>
+            {% else %}
+            <p>No visitors yet.</p>
+            {% endfor %}
         </div>
     </div>
 
