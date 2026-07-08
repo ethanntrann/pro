@@ -15,7 +15,8 @@ app.secret_key = os.getenv("SECRET_KEY") or os.urandom(24)
 API_KEY = os.getenv("BAYLEAF_API_KEY", "campus")
 ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD")
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DATA_FILE = os.path.join(BASE_DIR, "site_data.json")
+DEFAULT_DATA_DIR = "/var/data" if os.path.isdir("/var/data") else BASE_DIR
+DATA_FILE = os.getenv("DATA_FILE") or os.path.join(DEFAULT_DATA_DIR, "site_data.json")
 UPLOAD_FOLDER = os.path.join(BASE_DIR, "static", "uploads")
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif", "webp"}
 ALLOWED_MEDIA_EXTENSIONS = {"png", "jpg", "jpeg", "gif", "webp", "pdf"}
@@ -25,6 +26,7 @@ GITHUB_URL = "https://github.com/ethanntrann"
 PACIFIC_TIME = ZoneInfo("America/Los_Angeles")
 VISITOR_COOKIE = "ethan_visitor_id"
 
+os.makedirs(os.path.dirname(DATA_FILE), exist_ok=True)
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 research_experiences = [
@@ -265,7 +267,7 @@ def normalize_visitors(visits):
             "ip_prefix": visit.get("ip_prefix", "unknown")
         })
 
-    return list(reversed(normalized))[:500]
+    return list(reversed(normalized))[:5000]
 
 def visitor_ip_prefix():
     forwarded = request.headers.get("X-Forwarded-For", "")
@@ -315,7 +317,7 @@ def track_visit(page):
     })
     if not request.cookies.get(VISITOR_COOKIE):
         g.new_visitor_id = visitor_id
-    data["visits"] = data["visits"][:500]
+    data["visits"] = data["visits"][:5000]
     save_data(data)
 
 def analytics_summary(visits):
@@ -323,7 +325,7 @@ def analytics_summary(visits):
 
     return {
         "total_visitors": len(visitors),
-        "recent_visits": visitors[:50]
+        "recent_visits": visitors
     }
 
 def editor_items(section):
