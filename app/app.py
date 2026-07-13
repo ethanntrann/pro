@@ -34,20 +34,18 @@ research_experiences = [
         "title": "UCSC Science Internship Program",
         "organization": "CPM-07: AI-Facilitated Group Formation and Project Ideation for Hackathons",
         "logo_url": "/static/ucsc-sip-logo.png",
-        "description": "Selected for the UCSC Science Internship Program project CPM-07, mentored by Alexander Sherbrooke with faculty advisor David Lee. This three-intern research project explores how generative AI can create personalized activities that help hackathon participants form groups, generate project ideas, and collaborate in fun, engaging ways.",
+        "description": "Selected for UCSC SIP project CPM-07, mentored by Alexander Sherbrooke with faculty advisor David Lee. I explored how generative AI can help hackathon participants form teams, create project ideas, and connect through personalized activities.",
         "details": [
-            "Building on Blossom, a platform that uses pre-event surveys to generate human bingo boards for large events.",
-            "Designing and experimenting with AI-generated icebreaker activities using pre-event survey responses.",
-            "Researching collaborative activity design, large-group ideation, and how bonding activities bring participants together.",
-            "Creating and testing new Blossom activities that use generative AI to support connection, group formation, and project ideation.",
-            "Learning prompt engineering by designing and iterating prompts for large language models."
+            "Helped build a chatbot for Blossom, a platform that uses human bingo to help people connect at events.",
+            "Designed AI-generated icebreaker and bonding activities from pre-event survey responses.",
+            "Researched group ideation, prompt engineering, and activity design for collaborative events."
         ]
     },
     {
         "title": "Healthcare Internship",
         "organization": "Epic Care",
         "logo_url": "/static/epic-care-logo.png",
-        "description": "Shadowed oncologist Dr. Bao Dao and learned about oncology practices such as patient consultations, reviewing imaging and lab results, discussing treatment plans, understanding chemotherapy and radiation care, and observing how physicians communicate with patients and families."
+        "description": "Shadowed oncologist Dr. Bao Dao for two years and learned about oncology practices such as patient consultations, reviewing imaging and lab results, discussing treatment plans, understanding chemotherapy and radiation care, and observing how physicians communicate with patients and families."
     },
     {
         "title": "Hospital Volunteering",
@@ -170,7 +168,8 @@ American Red Cross Club, FBLA, WeBall, APISU, and Key Club.
 He is part of the UCSC Science Internship Program project CPM-07,
 AI-Facilitated Group Formation and Project Ideation for Hackathons,
 where he works with Blossom, human bingo, generative AI, icebreaker
-activities, prompt engineering, and group ideation.
+activities, prompt engineering, group ideation, and helped build a
+chatbot for Blossom. He shadowed oncologist Dr. Bao Dao for two years.
 He has earned awards in FBLA, HOSA, humanitarian and international law
 advocacy, and the President's Volunteer Service Award - Gold.
 
