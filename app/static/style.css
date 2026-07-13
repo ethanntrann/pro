@@ -663,6 +663,45 @@ p {
     font-weight: 600;
 }
 
+.experience-card {
+    display: flex;
+    flex-direction: column;
+}
+
+.experience-logo-wrap {
+    height: 96px;
+    display: grid;
+    place-items: center;
+    padding: 14px;
+    margin-bottom: 18px;
+    border: 1px solid rgba(17,17,17,0.08);
+    border-radius: 8px;
+    background: #fffdf8;
+}
+
+.experience-logo {
+    max-width: 100%;
+    max-height: 68px;
+    object-fit: contain;
+}
+
+.experience-organization {
+    margin-top: 0;
+    margin-bottom: 8px;
+    color: #8a6d2f;
+    font-weight: 800;
+}
+
+.experience-details {
+    margin: 4px 0 0;
+    padding-left: 20px;
+}
+
+.experience-details li {
+    margin-bottom: 10px;
+    line-height: 1.55;
+}
+
 .tags span {
     display: inline-block;
     background: #111111;
@@ -1001,6 +1040,36 @@ p {
 .analytics-card strong {
     display: block;
     font-size: 32px;
+}
+
+.analytics-storage {
+    display: grid;
+    gap: 6px;
+    margin: 18px 0 24px;
+    padding: 16px 18px;
+    border-radius: 8px;
+    border: 1px solid rgba(17,17,17,0.12);
+    background: white;
+}
+
+.analytics-storage strong {
+    font-size: 16px;
+}
+
+.analytics-storage span {
+    color: #666;
+    font-size: 13px;
+    overflow-wrap: anywhere;
+}
+
+.storage-ok {
+    border-color: rgba(38, 120, 72, 0.35);
+    background: #f2fbf5;
+}
+
+.storage-warning {
+    border-color: rgba(138, 47, 47, 0.35);
+    background: #fff7f5;
 }
 
 .admin-plain-list {

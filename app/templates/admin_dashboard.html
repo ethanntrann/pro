@@ -15,6 +15,11 @@
         </div>
     </div>
 
+    <div class="analytics-storage {% if analytics_storage.is_persistent %}storage-ok{% else %}storage-warning{% endif %}">
+        <strong>{{ analytics_storage.message }}</strong>
+        <span>{{ analytics_storage.path }}</span>
+    </div>
+
     <div class="card">
         <h3>Visitor List</h3>
         <div class="visit-list">

@@ -7,9 +7,24 @@
     <h2>Experiences</h2>
     <div class="grid">
         {% for item in research_experiences %}
-        <div class="card">
+        <div class="card experience-card">
+            {% if item.logo_url %}
+            <div class="experience-logo-wrap">
+                <img class="experience-logo" src="{{ item.logo_url }}" alt="{{ item.organization or item.title }} logo">
+            </div>
+            {% endif %}
             <h3>{{ item.title }}</h3>
+            {% if item.organization %}
+            <span class="experience-organization">{{ item.organization }}</span>
+            {% endif %}
             <p>{{ item.description }}</p>
+            {% if item.details %}
+            <ul class="experience-details">
+                {% for detail in item.details %}
+                <li>{{ detail }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
         </div>
         {% endfor %}
     </div>

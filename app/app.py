@@ -31,11 +31,28 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 research_experiences = [
     {
+        "title": "UCSC Science Internship Program",
+        "organization": "CPM-07: AI-Facilitated Group Formation and Project Ideation for Hackathons",
+        "logo_url": "/static/ucsc-sip-logo.png",
+        "description": "Selected for the UCSC Science Internship Program project CPM-07, mentored by Alexander Sherbrooke with faculty advisor David Lee. This three-intern research project explores how generative AI can create personalized activities that help hackathon participants form groups, generate project ideas, and collaborate in fun, engaging ways.",
+        "details": [
+            "Building on Blossom, a platform that uses pre-event surveys to generate human bingo boards for large events.",
+            "Designing and experimenting with AI-generated icebreaker activities using pre-event survey responses.",
+            "Researching collaborative activity design, large-group ideation, and how bonding activities bring participants together.",
+            "Creating and testing new Blossom activities that use generative AI to support connection, group formation, and project ideation.",
+            "Learning prompt engineering by designing and iterating prompts for large language models."
+        ]
+    },
+    {
         "title": "Healthcare Internship",
+        "organization": "Epic Care",
+        "logo_url": "/static/epic-care-logo.png",
         "description": "Shadowed oncologist Dr. Bao Dao and learned about oncology practices such as patient consultations, reviewing imaging and lab results, discussing treatment plans, understanding chemotherapy and radiation care, and observing how physicians communicate with patients and families."
     },
     {
         "title": "Hospital Volunteering",
+        "organization": "Pomona Valley Hospital Medical Center",
+        "logo_url": "/static/pomona-valley-hospital-logo.png",
         "description": "Volunteered at Pomona Valley Hospital for four years, gaining experience through direct patient interactions, patient support, communication with hospital staff, and helping create a more welcoming and compassionate care environment."
     }
 ]
@@ -150,6 +167,10 @@ and building technology that helps people. He has taken college-level
 biology and AP Chemistry, enjoys building computers, plays basketball,
 spends time with family, enjoys trying new restaurants, has hundreds of community service hours, and has leadership roles in
 American Red Cross Club, FBLA, WeBall, APISU, and Key Club.
+He is part of the UCSC Science Internship Program project CPM-07,
+AI-Facilitated Group Formation and Project Ideation for Hackathons,
+where he works with Blossom, human bingo, generative AI, icebreaker
+activities, prompt engineering, and group ideation.
 He has earned awards in FBLA, HOSA, humanitarian and international law
 advocacy, and the President's Volunteer Service Award - Gold.
 
@@ -267,7 +288,7 @@ def normalize_visitors(visits):
             "ip_prefix": visit.get("ip_prefix", "unknown")
         })
 
-    return list(reversed(normalized))[:5000]
+    return list(reversed(normalized))
 
 def visitor_ip_prefix():
     forwarded = request.headers.get("X-Forwarded-For", "")
@@ -317,7 +338,6 @@ def track_visit(page):
     })
     if not request.cookies.get(VISITOR_COOKIE):
         g.new_visitor_id = visitor_id
-    data["visits"] = data["visits"][:5000]
     save_data(data)
 
 def analytics_summary(visits):
@@ -326,6 +346,14 @@ def analytics_summary(visits):
     return {
         "total_visitors": len(visitors),
         "recent_visits": visitors
+    }
+
+def analytics_storage_status():
+    is_persistent = DATA_FILE.startswith("/var/data") or bool(os.getenv("DATA_FILE"))
+    return {
+        "path": DATA_FILE,
+        "is_persistent": is_persistent,
+        "message": "Persistent visitor storage is active." if is_persistent else "Visitor storage is local. Add a Render persistent disk at /var/data or set DATA_FILE to a durable path so analytics survive redeploys and downtime."
     }
 
 def editor_items(section):
@@ -463,7 +491,8 @@ def admin_dashboard():
         "admin_dashboard.html",
         questions=data["assistant_questions"],
         site_items=data["site_items"],
-        analytics=analytics_summary(data["visits"])
+        analytics=analytics_summary(data["visits"]),
+        analytics_storage=analytics_storage_status()
     )
 
 def build_site_item(title, description, section, heading, image_url, file_url="", file_name=""):
