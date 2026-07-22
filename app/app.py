@@ -31,6 +31,36 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 research_experiences = [
     {
+        "title": "Stanford School of Medicine",
+        "organization": "Alzheimer's Disease Research | Mentors: Laurent Bekale, PhD and Annelise Barron, PhD",
+        "description": "Investigating interactions between the NLRP3 inflammasome, which is implicated in Alzheimer's disease, and the human peptide LL-37 through complementary computational and laboratory research.",
+        "details": [
+            "Use protein docking, structural modeling, and AI-assisted analysis to identify potential binding sites and evaluate candidate domains of NLRP3.",
+            "Conduct laboratory experiments that complement and help test computational findings.",
+            "Map Alzheimer's-associated genes in collaboration with Dr. James J. Truchard and Benjamin Gustafsson."
+        ]
+    },
+    {
+        "title": "UCI School of Medicine",
+        "organization": "Computational Biology and Disease Genomics Lab | Research Assistant | Mentors: Ya Allen Cui, PhD (Principal Investigator) and Weifan Yin, PhD",
+        "description": "Conducting a literature review of candidate genes identified through preliminary screening for potential associations with neurodevelopmental disorders and epilepsy.",
+        "details": [
+            "Synthesize published evidence linking prioritized genes to disease and assess the strength of each reported association.",
+            "Summarize disease phenotypes, inheritance patterns, molecular mechanisms, and key references for each candidate gene.",
+            "Use Linux/Bash and R to organize and analyze candidate-gene data and support the literature-review workflow."
+        ]
+    },
+    {
+        "title": "UCR Department of Psychology",
+        "organization": "Calla Lab | Research Assistant | Principal Investigator: Rachel Wu, PhD | Mentor: Jasmine Ford",
+        "description": "Examining how chronic occupational stress may dysregulate the HPA axis and affect inflammation, brain connectivity, cognitive performance, learning, memory, and daily functioning.",
+        "details": [
+            "Compare acute and chronic occupational stress and review their long-term neurological and physiological effects in high-stress professions.",
+            "Evaluate current wellness and mindfulness interventions, including limitations in the evidence for restoring healthy HPA-axis regulation.",
+            "Investigate lifelong learning as a potential intervention for supporting cognitive function and healthy aging while identifying priorities for future research."
+        ]
+    },
+    {
         "title": "UCSC Science Internship Program",
         "organization": "CPM-07: AI-Facilitated Group Formation and Project Ideation for Hackathons",
         "logo_url": "/static/ucsc-sip-logo.png",
@@ -169,7 +199,17 @@ He is part of the UCSC Science Internship Program project CPM-07,
 AI-Facilitated Group Formation and Project Ideation for Hackathons,
 where he works with Blossom, human bingo, generative AI, icebreaker
 activities, prompt engineering, group ideation, and helped build a
-chatbot for Blossom. He shadowed oncologist Dr. Bao Dao for two years.
+chatbot for Blossom. At Stanford School of Medicine, mentors Laurent Bekale,
+PhD and Annelise Barron, PhD guide his study of how the NLRP3 inflammasome
+interacts with LL-37 using protein docking, structural modeling, AI-assisted
+analysis, and laboratory experiments; he also maps Alzheimer's-associated
+genes. At UCI School of Medicine, he is mentored by principal investigator
+Ya Allen Cui, PhD and Weifan Yin, PhD while reviewing candidate genes
+associated with neurodevelopmental disorders and epilepsy using Linux/Bash
+and R. At the UCR Department of Psychology, Jasmine Ford mentors him under
+principal investigator Rachel Wu, PhD as he studies chronic occupational
+stress, HPA-axis dysregulation, cognition, and learning-based interventions.
+He shadowed oncologist Dr. Bao Dao for two years.
 He has earned awards in FBLA, HOSA, humanitarian and international law
 advocacy, and the President's Volunteer Service Award - Gold.
 
