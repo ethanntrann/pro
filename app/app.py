@@ -32,7 +32,8 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 research_experiences = [
     {
         "title": "Stanford School of Medicine",
-        "organization": "Alzheimer's Disease Research | Mentors: Laurent Bekale, PhD and Annelise Barron, PhD",
+        "organization": "Research Intern | Barron Lab | Mentors: Laurent Bekale, PhD and Annelise Barron, PhD",
+        "logo_url": "/static/stanford-department-of-medicine-logo.png",
         "description": "Investigating interactions between the NLRP3 inflammasome, which is implicated in Alzheimer's disease, and the human peptide LL-37 through complementary computational and laboratory research.",
         "details": [
             "Use protein docking, structural modeling, and AI-assisted analysis to identify potential binding sites and evaluate candidate domains of NLRP3.",
@@ -42,7 +43,8 @@ research_experiences = [
     },
     {
         "title": "UCI School of Medicine",
-        "organization": "Computational Biology and Disease Genomics Lab | Research Assistant | Mentors: Ya Allen Cui, PhD (Principal Investigator) and Weifan Yin, PhD",
+        "organization": "Research Intern | Computational Biology and Disease Genomics Lab | Mentors: Ya Allen Cui, PhD (Principal Investigator) and Weifan Yin, MD, PhD",
+        "logo_url": "/static/uci-school-of-medicine-logo.png",
         "description": "Conducting a literature review of candidate genes identified through preliminary screening for potential associations with neurodevelopmental disorders and epilepsy.",
         "details": [
             "Synthesize published evidence linking prioritized genes to disease and assess the strength of each reported association.",
@@ -52,7 +54,8 @@ research_experiences = [
     },
     {
         "title": "UCR Department of Psychology",
-        "organization": "Calla Lab | Research Assistant | Principal Investigator: Rachel Wu, PhD | Mentor: Jasmine Ford",
+        "organization": "Research Intern | Calla Lab | Mentor: Jasmine Ford | Principal Investigator: Rachel Wu, PhD",
+        "logo_url": "/static/ucr-department-of-psychology-logo.png",
         "description": "Examining how chronic occupational stress may dysregulate the HPA axis and affect inflammation, brain connectivity, cognitive performance, learning, memory, and daily functioning.",
         "details": [
             "Compare acute and chronic occupational stress and review their long-term neurological and physiological effects in high-stress professions.",
@@ -199,12 +202,13 @@ He is part of the UCSC Science Internship Program project CPM-07,
 AI-Facilitated Group Formation and Project Ideation for Hackathons,
 where he works with Blossom, human bingo, generative AI, icebreaker
 activities, prompt engineering, group ideation, and helped build a
-chatbot for Blossom. At Stanford School of Medicine, mentors Laurent Bekale,
-PhD and Annelise Barron, PhD guide his study of how the NLRP3 inflammasome
+chatbot for Blossom. As a research intern in the Barron Lab at Stanford
+School of Medicine, mentors Laurent Bekale, PhD and Annelise Barron, PhD
+guide his study of how the NLRP3 inflammasome
 interacts with LL-37 using protein docking, structural modeling, AI-assisted
 analysis, and laboratory experiments; he also maps Alzheimer's-associated
 genes. At UCI School of Medicine, he is mentored by principal investigator
-Ya Allen Cui, PhD and Weifan Yin, PhD while reviewing candidate genes
+Ya Allen Cui, PhD and Weifan Yin, MD, PhD while reviewing candidate genes
 associated with neurodevelopmental disorders and epilepsy using Linux/Bash
 and R. At the UCR Department of Psychology, Jasmine Ford mentors him under
 principal investigator Rachel Wu, PhD as he studies chronic occupational
