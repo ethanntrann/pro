@@ -672,16 +672,15 @@ p {
     height: 96px;
     display: grid;
     place-items: center;
-    padding: 14px;
+    padding: 0;
     margin-bottom: 18px;
-    border: 1px solid rgba(17,17,17,0.08);
-    border-radius: 8px;
-    background: #fffdf8;
+    border: 0;
+    background: transparent;
 }
 
 .experience-logo {
-    max-width: 100%;
-    max-height: 68px;
+    width: 100%;
+    height: 88px;
     object-fit: contain;
 }
 
